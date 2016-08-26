@@ -1448,7 +1448,7 @@ OmegaUp.prototype.createProblem = function(contestAlias, problemAlias, callback)
 OmegaUp.prototype.getContestRuns = function(contestAlias, options, callback) {
 	var self = this;
 
-	$.post(
+	$.get(
 		'/api/contest/runs/contest_alias/' + encodeURIComponent(contestAlias) + '/',
 		options,
 		function (data) {
@@ -1675,9 +1675,19 @@ OmegaUp.prototype.getProblemsSolved = function(username, callback) {
 OmegaUp.prototype.getRuns = function(options, callback) {
 	var self = this;
 
-	$.post(
-		'/api/run/list/',
-		options,
+	var optionsInUrl = "";
+
+	for (var prop in options) {
+		if (!options.hasOwnProperty(prop)) {
+			//The current property is not a direct property of p
+			continue;
+		}
+		optionsInUrl += prop + '/' + options[prop] + '/';
+	}
+
+	$.get(
+		'/api/run/list/' + optionsInUrl,
+		null,
 		function (data) {
 			for (var i = 0; i < data.runs.length; i++) {
 				data.runs[i].time = self.time(data.runs[i].time * 1000);
@@ -1964,19 +1974,19 @@ OmegaUp.prototype.getScoreboardMerge = function(contestAliases, callback) {
 OmegaUp.prototype.getGraderStats = function(callback) {
 	var self = this;
 
-	$.get(
-		'/api/grader/status/',
-		function (data) {
-			callback(data);
-		},
-		'json'
-	).fail(function(j, status, errorThrown) {
-		try {
-			callback(JSON.parse(j.responseText));
-		} catch (err) {
-			callback({status:'ok', 'error':undefined});
-		}
-	});
+	//$.get(
+	//	'/api/grader/status/',
+	//	function (data) {
+	//		callback(data);
+	//	},
+	//	'json'
+	//).fail(function(j, status, errorThrown) {
+	//	try {
+	//		callback(JSON.parse(j.responseText));
+	//	} catch (err) {
+	//		callback({status:'ok', 'error':undefined});
+	//	}
+	//});
 };
 
 OmegaUp.prototype.getClarifications = function(contestAlias, offset, count, callback) {

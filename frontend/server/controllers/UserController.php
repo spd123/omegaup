@@ -132,9 +132,9 @@ class UserController extends Controller {
             throw new InvalidDatabaseOperationException($e);
         }
 
-        if (!is_null($r['skip_verification_email']) && ($r['skip_verification_email'] == 1)) {
-            UserController::$sendEmailOnVerify = false;
-        }
+        //if (!is_null($r['skip_verification_email']) && ($r['skip_verification_email'] == 1)) {
+        //    UserController::$sendEmailOnVerify = false;
+        //}
 
         $r['user'] = $user;
         if (!$user->verified) {

@@ -18,7 +18,13 @@ $(document).ready(function() {
 		}
 	});
 
-	omegaup.getRuns({ username : candidateUsername, contest_alias : interviewAlias }, function(runs){
-		console.log(runs)
-	});
+	omegaup.getRuns({
+			username : candidateUsername,
+			contest_alias : interviewAlias
+		},
+		function(runs) {
+			console.log(runs)
+			if (data.status != 'ok') return;
+		});
+
 });

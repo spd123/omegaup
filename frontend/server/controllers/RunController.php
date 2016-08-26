@@ -741,6 +741,22 @@ class RunController extends Controller {
             }
         }
 
+        // Check filter by contest, it's optional
+        if (!is_null($r['contest_alias'])) {
+            Validators::isStringNonEmpty($r['contest_alias'], 'contest_alias');
+
+            try {
+                $r['contest'] = ContestsDAO::getByAlias($r['contest_alias']);
+            } catch (Exception $e) {
+                // Operation failed in the data layer
+                throw new InvalidDatabaseOperationException($e);
+            }
+
+            if (is_null($r['contest'])) {
+                throw new NotFoundException('contestNotFound');
+            }
+        }
+
         Validators::isInEnum($r['language'], 'language', array('c', 'cpp', 'cpp11', 'java', 'py', 'rb', 'pl', 'cs', 'pas', 'kp', 'kj', 'cat', 'hs'), false);
 
         // Get user if we have something in username
@@ -769,7 +785,7 @@ class RunController extends Controller {
 
         try {
             $runs = RunsDAO::GetAllRuns(
-                null,
+                $r['contest']->getContestId(),
                 $r['status'],
                 $r['verdict'],
                 !is_null($r['problem']) ? $r['problem']->getProblemId() : null,
