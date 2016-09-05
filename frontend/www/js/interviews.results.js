@@ -27,4 +27,7 @@ $(document).ready(function() {
 			if (data.status != 'ok') return;
 		});
 
+	//omegaup.getRuns({ username : candidateUsername, contest_alias : interviewAlias }, function(runs){
+	//	console.log(runs)
+	//});
 });

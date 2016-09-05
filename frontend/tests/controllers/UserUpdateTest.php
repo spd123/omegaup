@@ -15,7 +15,7 @@ class UserUpdateTest extends OmegaupTestCase {
         $r = new Request();
 
         // Login
-        $r['auth_token'] = $this->login($user);
+        $r['auth_token'] = self::login($user);
 
         // Change values
         $r['name'] = Utils::CreateRandomString();
@@ -34,13 +34,13 @@ class UserUpdateTest extends OmegaupTestCase {
 
         // Check user from db
         $user_db = AuthTokensDAO::getUserByToken($r['auth_token']);
-        $this->assertEquals($user_db->getName(), $r['name']);
-        $this->assertEquals($user_db->getCountryId(), $r['country_id']);
-        $this->assertEquals($user_db->getStateId(), $r['state_id']);
-        $this->assertEquals($user_db->getScholarDegree(), $r['scholar_degree']);
-        $this->assertEquals($user_db->getBirthDate(), gmdate('Y-m-d', $r['birth_date']));
-        $this->assertEquals($user_db->getGraduationDate(), gmdate('Y-m-d', $r['graduation_date']));
-        $this->assertEquals($user_db->getRecruitmentOptin(), $r['recruitment_optin']);
+        $this->assertEquals($user_db->name, $r['name']);
+        $this->assertEquals($user_db->country_id, $r['country_id']);
+        $this->assertEquals($user_db->state_id, $r['state_id']);
+        $this->assertEquals($user_db->scholar_degree, $r['scholar_degree']);
+        $this->assertEquals($user_db->birth_date, gmdate('Y-m-d', $r['birth_date']));
+        $this->assertEquals($user_db->graduation_date, gmdate('Y-m-d', $r['graduation_date']));
+        $this->assertEquals($user_db->recruitment_optin, $r['recruitment_optin']);
     }
 
     /**
@@ -51,12 +51,29 @@ class UserUpdateTest extends OmegaupTestCase {
         $user = UserFactory::createUser();
 
         $r = new Request();
-        $r['auth_token'] = $this->login($user);
+        $r['auth_token'] = self::login($user);
         $r['name'] = Utils::CreateRandomString();
         $r['recruitment_optin'] = 1;
 
         // Invalid state_id
         $r['state_id'] = -1;
+
+        UserController::apiUpdate($r);
+    }
+
+     /**
+     * Request parameter name cannot be too long
+     * @expectedException InvalidParameterException
+     */
+    public function testNameUpdateTooLong() {
+        $user = UserFactory::createUser();
+
+        $r = new Request();
+        $r['auth_token'] = self::login($user);
+
+        // Invalid name
+        $r['name'] = 'TThisIsWayTooLong ThisIsWayTooLong ThisIsWayTooLong ThisIsWayTooLong hisIsWayTooLong ';
+        $r['country_id'] = 'MX';
 
         UserController::apiUpdate($r);
     }
@@ -69,7 +86,7 @@ class UserUpdateTest extends OmegaupTestCase {
         $user = UserFactory::createUser();
 
         $r = new Request();
-        $r['auth_token'] = $this->login($user);
+        $r['auth_token'] = self::login($user);
 
         // Invalid name
         $r['name'] = '';
@@ -85,7 +102,7 @@ class UserUpdateTest extends OmegaupTestCase {
         $user = UserFactory::createUser();
 
         $r = new Request();
-        $r['auth_token'] = $this->login($user);
+        $r['auth_token'] = self::login($user);
         $r['name'] = Utils::CreateRandomString();
 
         // Null recruitment_optin
@@ -101,19 +118,19 @@ class UserUpdateTest extends OmegaupTestCase {
         $user = UserFactory::createUser();
 
         $r = new Request();
-        $r['auth_token'] = $this->login($user);
+        $r['auth_token'] = self::login($user);
         $r['name'] = Utils::CreateRandomString();
 
         // Set recruitment_optin to true
         $r['recruitment_optin'] = 1;
         UserController::apiUpdate($r);
         $user_db = AuthTokensDAO::getUserByToken($r['auth_token']);
-        $this->assertEquals($user_db->getRecruitmentOptin(), $r['recruitment_optin']);
+        $this->assertEquals($user_db->recruitment_optin, $r['recruitment_optin']);
 
         // Set recruitment_optin to false
         $r['recruitment_optin'] = 0;
         UserController::apiUpdate($r);
         $user_db = AuthTokensDAO::getUserByToken($r['auth_token']);
-        $this->assertEquals($user_db->getRecruitmentOptin(), $r['recruitment_optin']);
+        $this->assertEquals($user_db->recruitment_optin, $r['recruitment_optin']);
     }
 }

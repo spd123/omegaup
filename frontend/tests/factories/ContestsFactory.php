@@ -61,7 +61,8 @@ class ContestsFactory {
         $contestDirector = $contestData['director'];
 
         // Log in the user and set the auth token in the new request
-        $r['auth_token'] = OmegaupTestCase::login($contestDirector);
+        $login = OmegaupTestCase::login($contestDirector);
+        $r['auth_token'] = $login->auth_token;
 
         // Call the API
         $response = ContestController::apiCreate($r);
@@ -85,7 +86,8 @@ class ContestsFactory {
         $r = new Request();
 
         // Log in as contest director
-        $r['auth_token'] = OmegaupTestCase::login($contestData['director']);
+        $login = OmegaupTestCase::login($contestData['director']);
+        $r['auth_token'] = $login->auth_token;
 
         // Build request
         $r['contest_alias'] = $contestData['request']['alias'];
@@ -105,7 +107,8 @@ class ContestsFactory {
         $r = new Request();
 
         // Log in as contest director
-        $r['auth_token'] = OmegaupTestCase::login($user);
+        $login = OmegaupTestCase::login($user);
+        $r['auth_token'] = $login->auth_token;
 
         // Prepare our request
         $r['contest_alias'] = $contestData['request']['alias'];
@@ -123,7 +126,8 @@ class ContestsFactory {
         $r['problem_alias'] = $problemData['request']['alias'];
 
         // Log in the user
-        $r['auth_token'] = OmegaupTestCase::login($user);
+        $login = OmegaupTestCase::login($user);
+        $r['auth_token'] = $login->auth_token;
 
         // Call api
         ProblemController::apiDetails($r);
@@ -135,10 +139,11 @@ class ContestsFactory {
         // Prepare our request
         $r = new Request();
         $r['contest_alias'] = $contestData['request']['alias'];
-        $r['usernameOrEmail'] = $user->getUsername();
+        $r['usernameOrEmail'] = $user->username;
 
         // Log in the contest director
-        $r['auth_token'] = OmegaupTestCase::login($contestData['director']);
+        $login = OmegaupTestCase::login($contestData['director']);
+        $r['auth_token'] = $login->auth_token;
 
         // Call api
         ContestController::apiAddUser($r);
@@ -150,10 +155,11 @@ class ContestsFactory {
         // Prepare our request
         $r = new Request();
         $r['contest_alias'] = $contestData['request']['alias'];
-        $r['usernameOrEmail'] = $user->getUsername();
+        $r['usernameOrEmail'] = $user->username;
 
         // Log in the contest director
-        $r['auth_token'] = OmegaupTestCase::login($contestData['director']);
+        $login = OmegaupTestCase::login($contestData['director']);
+        $r['auth_token'] = $login->auth_token;
 
         // Call api
         ContestController::apiAddAdmin($r);
@@ -163,19 +169,19 @@ class ContestsFactory {
 
     public static function makeContestWindowLength($contestData, $windowLength = 20) {
         $contest = ContestsDAO::getByAlias($contestData['request']['alias']);
-        $contest->setWindowLength($windowLength);
+        $contest->window_length = $windowLength;
         ContestsDAO::save($contest);
     }
 
     public static function forcePublic($contestData) {
         $contest = ContestsDAO::getByAlias($contestData['request']['alias']);
-        $contest->setPublic(1);
+        $contest->public = 1;
         ContestsDAO::save($contest);
     }
 
     public static function setScoreboardPercentage($contestData, $percentage) {
         $contest = ContestsDAO::getByAlias($contestData['request']['alias']);
-        $contest->setScoreboard($percentage);
+        $contest->scoreboard = $percentage;
         ContestsDAO::save($contest);
     }
 }

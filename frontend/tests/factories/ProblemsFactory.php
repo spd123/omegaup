@@ -52,7 +52,7 @@ class ProblemsFactory {
         $r = new Request();
         $r['title'] = $title;
         $r['alias'] = substr(preg_replace('/[^a-zA-Z0-9_-]/', '', str_replace(' ', '-', $r['title'])), 0, 32);
-        $r['author_username'] = $author->getUsername();
+        $r['author_username'] = $author->username;
         $r['validator'] = 'token';
         $r['time_limit'] = 5000;
         $r['overall_wall_time_limit'] = 60000;
@@ -97,7 +97,8 @@ class ProblemsFactory {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = OmegaupTestCase::login($problemAuthor);
+        $login = OmegaupTestCase::login($problemAuthor);
+        $r['auth_token'] = $login->auth_token;
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader(new FileUploaderMock());
@@ -111,6 +112,7 @@ class ProblemsFactory {
         return array (
             'request' => $r,
             'author' => $problemAuthor,
-            );
+            'problem' => ProblemsDAO::getByAlias($r['alias']),
+        );
     }
 }

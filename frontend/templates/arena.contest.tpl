@@ -1,7 +1,7 @@
 {include file='arena.head.tpl' jsfile=$jsfile inContest=!$practice}
 
 {if $admin}
-			<script type="text/javascript" src="/ux/libadmin.js?ver=4ef011"></script>
+			<script type="text/javascript" src="/ux/libadmin.js?ver=cbed96"></script>
 			<audio id="notification_audio">
 				<source src="/media/notification.mp3" type="audio/mpeg" />
 			</audio>
@@ -181,7 +181,8 @@
 				{#wordsProblem#}
 				<select name="problem">
 				</select><br/>
-				<textarea name="message"></textarea><br/>
+				<label for="message">{#arenaClarificationCreateMaxLength#}</label>
+				<textarea name="message" maxlength="200"></textarea><br/>
 				<input type="submit" />
 			</form>
 {include file='arena.rundetails.tpl'}

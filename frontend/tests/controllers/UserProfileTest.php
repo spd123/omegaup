@@ -18,7 +18,7 @@ class UserProfileTest extends OmegaupTestCase {
         $response = UserController::apiProfile($r);
 
         $this->assertArrayNotHasKey('password', $response['userinfo']);
-        $this->assertEquals($user->getUsername(), $response['userinfo']['username']);
+        $this->assertEquals($user->username, $response['userinfo']['username']);
     }
 
     /*
@@ -30,12 +30,44 @@ class UserProfileTest extends OmegaupTestCase {
 
         $r = new Request(array(
             'auth_token' => self::login($user),
-            'username' => $user2->getUsername()
+            'username' => $user2->username
         ));
         $response = UserController::apiProfile($r);
 
         $this->assertArrayNotHasKey('password', $response['userinfo']);
-        $this->assertEquals($user2->getUsername(), $response['userinfo']['username']);
+        $this->assertArrayNotHasKey('email', $response['userinfo']);
+        $this->assertEquals($user2->username, $response['userinfo']['username']);
+    }
+
+    /*
+     * Test admin can see emails for all profiles
+     */
+    public function testAdminCanSeeEmails() {
+        $user = UserFactory::createUser();
+        $admin = UserFactory::createAdminUser();
+
+        $r = new Request(array(
+            'auth_token' => self::login($admin),
+            'username' => $user->username
+        ));
+        $response = UserController::apiProfile($r);
+
+        $this->assertArrayHasKey('email', $response['userinfo']);
+    }
+
+    /*
+     * User can see his own email
+     */
+    public function testUserCanSeeSelfEmail() {
+        $user = UserFactory::createUser();
+
+        $r = new Request(array(
+            'auth_token' => self::login($user),
+            'username' => $user->username
+        ));
+        $response = UserController::apiProfile($r);
+
+        $this->assertArrayHasKey('email', $response['userinfo']);
     }
 
     /*
@@ -94,7 +126,7 @@ class UserProfileTest extends OmegaupTestCase {
         $response = UserController::apiContestStats(new Request(
             array(
                     'auth_token' => self::login($externalUser),
-                    'username' => $contestant->getUsername()
+                    'username' => $contestant->username
                 )
         ));
 
@@ -150,6 +182,6 @@ class UserProfileTest extends OmegaupTestCase {
 
         // Check email in db
         $user_in_db = UsersDAO::FindByEmail('new@email.com');
-        $this->assertEquals($user->getUserId(), $user_in_db->getUserId());
+        $this->assertEquals($user->user_id, $user_in_db->user_id);
     }
 }

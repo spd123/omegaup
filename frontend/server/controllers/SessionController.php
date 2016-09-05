@@ -145,33 +145,43 @@ class SessionController extends Controller {
         }
 
         // Get email via his id
-        $vo_Email = EmailsDAO::getByPK($vo_CurrentUser->getMainEmailId());
+        $vo_Email = EmailsDAO::getByPK($vo_CurrentUser->main_email_id);
 
         $_SESSION['omegaup_user'] = array(
-            'name' => $vo_CurrentUser->getUsername(),
-            'email' => !is_null($vo_Email) ? $vo_Email->getEmail() : ''
+            'name' => $vo_CurrentUser->username,
+            'email' => !is_null($vo_Email) ? $vo_Email->email : ''
         );
 
         return array(
             'valid' => true,
-            'id' => $vo_CurrentUser->getUserId(),
-            'name' => $vo_CurrentUser->getName(),
-            'email' => !is_null($vo_Email) ? $vo_Email->getEmail() : '',
-            'email_md5' => !is_null($vo_Email) ? md5($vo_Email->getEmail()) : '',
+            'id' => $vo_CurrentUser->user_id,
+            'name' => $vo_CurrentUser->name,
+            'email' => !is_null($vo_Email) ? $vo_Email->email : '',
+            'email_md5' => !is_null($vo_Email) ? md5($vo_Email->email) : '',
             'user' => $vo_CurrentUser,
-            'username' => $vo_CurrentUser->getUsername(),
+            'username' => $vo_CurrentUser->username,
             'auth_token' => $authToken,
-            'is_email_verified' => $vo_CurrentUser->getVerified(),
-            'is_admin' => Authorization::IsSystemAdmin($vo_CurrentUser->getUserId()),
+            'is_email_verified' => $vo_CurrentUser->verified,
+            'is_admin' => Authorization::IsSystemAdmin($vo_CurrentUser->user_id),
             'private_contests_count' => ContestsDAO::getPrivateContestsCount($vo_CurrentUser),
             'private_problems_count' => ProblemsDAO::getPrivateCount($vo_CurrentUser),
-            'needs_basic_info' =>$vo_CurrentUser->getPassword() == null
+            'needs_basic_info' =>$vo_CurrentUser->password == null
         );
     }
 
+    /**
+     * Invalidates the current user's session cache.
+     */
     public function InvalidateCache() {
-        $a_CurrentSession = self::apiCurrentSession();
-        Cache::deleteFromCache(Cache::SESSION_PREFIX, $a_CurrentSession['auth_token']);
+        $currentSession = self::apiCurrentSession();
+        Cache::deleteFromCache(Cache::SESSION_PREFIX, $currentSession['auth_token']);
+    }
+
+    /**
+     * Invalidates the current request's session cache.
+     */
+    public function InvalidateLocalCache() {
+        self::$current_session = null;
     }
 
     public function UnRegisterSession() {
@@ -180,8 +190,7 @@ class SessionController extends Controller {
         $a_CurrentSession = self::apiCurrentSession();
         $vo_AuthT = new AuthTokens(array('token' => $a_CurrentSession['auth_token']));
 
-        // Expire the local session cache.
-        self::$current_session = null;
+        $this->InvalidateLocalCache();
 
         try {
             AuthTokensDAO::delete($vo_AuthT);
@@ -199,28 +208,27 @@ class SessionController extends Controller {
             'ip' => ip2long($_SERVER['REMOTE_ADDR']),
         )));
 
-        // Expire the local session cache.
-        self::$current_session = null;
+        $this->InvalidateLocalCache();
 
         //find if this user has older sessions
         $vo_AuthT = new AuthTokens();
-        $vo_AuthT->setUserId($vo_User->getUserId());
+        $vo_AuthT->user_id = $vo_User->user_id;
 
         //erase expired tokens
         try {
-            $tokens_erased = AuthTokensDAO::expireAuthTokens($vo_User->getUserId());
+            $tokens_erased = AuthTokensDAO::expireAuthTokens($vo_User->user_id);
         } catch (Exception $e) {
             // Best effort
-            self::$log->error("Failed to delete expired tokens: $e->getMessage()");
+            self::$log->error("Failed to delete expired tokens: {$e->getMessage()}");
         }
 
         // Create the new token
         $entropy = bin2hex(mcrypt_create_iv(SessionController::AUTH_TOKEN_ENTROPY_SIZE, MCRYPT_DEV_URANDOM));
-        $s_AuthT = $entropy . '-' . $vo_User->getUserId() . '-' . hash('sha256', OMEGAUP_MD5_SALT . $vo_User->getUserId() . $entropy);
+        $s_AuthT = $entropy . '-' . $vo_User->user_id . '-' . hash('sha256', OMEGAUP_MD5_SALT . $vo_User->user_id . $entropy);
 
         $vo_AuthT = new AuthTokens();
-        $vo_AuthT->setUserId($vo_User->getUserId());
-        $vo_AuthT->setToken($s_AuthT);
+        $vo_AuthT->user_id = $vo_User->user_id;
+        $vo_AuthT->token = $s_AuthT;
 
         try {
             AuthTokensDAO::save($vo_AuthT);
@@ -454,7 +462,7 @@ class SessionController extends Controller {
 
         try {
             $vo_User = UserController::resolveUser($r['usernameOrEmail']);
-            $r['user_id'] = $vo_User->getUserId();
+            $r['user_id'] = $vo_User->user_id;
             $r['user'] = $vo_User;
         } catch (ApiException $e) {
             self::$log->warn('User ' . $r['usernameOrEmail'] . ' not found.');

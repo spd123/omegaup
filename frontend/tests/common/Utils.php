@@ -57,7 +57,7 @@ class Utils {
 
         // Delete those who belong to problem_id
         foreach ($clarifications as $c) {
-            if ($c->getProblemId() == $problem_id) {
+            if ($c->problem_id == $problem_id) {
                 try {
                     ClarificationsDAO::delete($c);
                 } catch (ApiException $e) {
@@ -126,28 +126,29 @@ class Utils {
 
         // Tables to truncate
         $tables = array(
-            'Runs',
-            'Contest_Problems',
-            'Contests_Users',
-            'Clarifications',
-            'Contest_Problem_Opened',
-            'Problems',
             'Auth_Tokens',
-            'Contests',
-            'Emails',
-            'User_Roles',
+            'Clarifications',
             'Coder_Of_The_Month',
-            'Users',
-            'Groups_Users',
-            'Groups_Scoreboards_Contests',
-            'Groups_Scoreboards',
-            'Groups',
-            'Group_Roles',
+            'Contest_Access_Log',
+            'Contest_Problem_Opened',
+            'Contest_Problems',
             'Contest_User_Request',
             'Contest_User_Request_History',
+            'Contests',
+            'Contests_Users',
+            'Emails',
+            'Group_Roles',
+            'Groups',
+            'Groups_Scoreboards',
+            'Groups_Scoreboards_Contests',
+            'Groups_Users',
+            'Interviews',
+            'Problems',
+            'Runs',
             'Submission_Log',
             'User_Login_Log',
-            'Contest_Access_Log'
+            'User_Roles',
+            'Users',
         );
 
         try {

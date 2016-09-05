@@ -29,6 +29,7 @@ class ClarificationController extends Controller {
         Validators::isStringNonEmpty($r['contest_alias'], 'contest_alias');
         Validators::isStringNonEmpty($r['problem_alias'], 'problem_alias');
         Validators::isStringNonEmpty($r['message'], 'message');
+        Validators::isStringOfMaxLength($r['message'], 'message', 200);
 
         try {
             $r['contest'] = ContestsDAO::getByAlias($r['contest_alias']);
@@ -46,7 +47,7 @@ class ClarificationController extends Controller {
         }
 
         // Is the combination contest_id and problem_id valid?
-        if (is_null(ContestProblemsDAO::getByPK($r['contest']->getContestId(), $r['problem']->getProblemId()))) {
+        if (is_null(ContestProblemsDAO::getByPK($r['contest']->contest_id, $r['problem']->problem_id))) {
             throw new NotFoundException('problemNotFoundInContest');
         }
     }
@@ -70,8 +71,8 @@ class ClarificationController extends Controller {
         $time = time();
         $r['clarification'] = new Clarifications(array(
             'author_id' => $r['current_user_id'],
-            'contest_id' => $r['contest']->getContestId(),
-            'problem_id' => $r['problem']->getProblemId(),
+            'contest_id' => $r['contest']->contest_id,
+            'problem_id' => $r['problem']->problem_id,
             'message' => $r['message'],
             'time' => gmdate('Y-m-d H:i:s', $time),
             'public' => '0'

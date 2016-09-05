@@ -59,7 +59,7 @@ omegaup_test.log
 
 # Ignore runtime and test stuff
 test-env
-frontend/www/templates_c
+templates_c
 /omegaup/
 bin/grader.sh
 frontend/www/runner-distrib.sh

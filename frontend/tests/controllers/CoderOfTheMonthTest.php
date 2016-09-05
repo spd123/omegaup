@@ -32,18 +32,18 @@ class CoderOfTheMonthTest extends OmegaupTestCase {
 
             // Force the run to be in last month
             $run = RunsDAO::getByAlias($runData['response']['guid']);
-            $run->setTime($runCreationDate);
+            $run->time = $runCreationDate;
             RunsDAO::save($run);
         }
 
         $response = UserController::apiCoderOfTheMonth(new Request());
 
-        $this->assertEquals($user->getUsername(), $response['userinfo']['username']);
+        $this->assertEquals($user->username, $response['userinfo']['username']);
     }
 
     public function testCoderOfTheMonthList() {
         $user = UserFactory::createUser();
-        $auth_token = $this->login($user);
+        $auth_token = self::login($user);
 
         $r = new Request(array(
             'auth_token' => $auth_token

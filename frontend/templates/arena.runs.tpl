@@ -75,6 +75,9 @@
 {if isset($show_user)}
 							<th>{#wordsUser#}</th>
 {/if}
+{if isset($show_contest)}
+							<th>{#wordsContest#}</th>
+{/if}
 {if isset($show_problem)}
 							<th>{#wordsProblem#}</th>
 {/if}
@@ -99,7 +102,8 @@
 {if isset($show_submit)}
 					<tfoot>
 						<tr>
-							<td colspan="9"><a href="#problems/new-run">{#wordsNewSubmissions#}</a></td>
+							<td id="new-run" colspan="9"><a href="#problems/new-run">{#wordsNewSubmissions#}</a></td>
+							<td id="new-run-practice-msg" colspan="9" style="display:none"><a>{#arenaContestEndedUsePractice#}</a></td>
 						</tr>
 					</tfoot>
 {/if}
@@ -109,6 +113,9 @@
 							<td class="guid"><acronym data-bind="text: short_guid, attr: { title: guid }"></acronym></td>
 {if isset($show_user)}
 							<td class="username" data-bind="html:user_html"></td>
+{/if}
+{if isset($show_contest)}
+							<td class="contest"><a data-bind="text: contest_alias, attr: { href: contest_alias_url }"></a></td>
 {/if}
 {if isset($show_problem)}
 							<td class="problem"><a data-bind="text: alias, attr: { href: problem_url }"></a></td>

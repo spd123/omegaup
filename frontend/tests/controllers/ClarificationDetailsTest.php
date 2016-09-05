@@ -18,11 +18,11 @@ class DetailsClarificationTest extends OmegaupTestCase {
         $clarification = ClarificationsDAO::getByPK($clarification_id);
 
         // Assert status of clarification
-        $this->assertEquals($clarification->getMessage(), $response['message']);
-        $this->assertEquals($clarification->getAnswer(), $response['answer']);
-        $this->assertEquals($clarification->getTime(), $response['time']);
-        $this->assertEquals($clarification->getProblemId(), $response['problem_id']);
-        $this->assertEquals($clarification->getContestId(), $response['contest_id']);
+        $this->assertEquals($clarification->message, $response['message']);
+        $this->assertEquals($clarification->answer, $response['answer']);
+        $this->assertEquals($clarification->time, $response['time']);
+        $this->assertEquals($clarification->problem_id, $response['problem_id']);
+        $this->assertEquals($clarification->contest_id, $response['contest_id']);
     }
 
     /**
@@ -55,7 +55,8 @@ class DetailsClarificationTest extends OmegaupTestCase {
         $r['clarification_id'] = $clarificationData['response']['clarification_id'];
 
         // Log in with the contest director
-        $r['auth_token'] = $this->login($contestData['director']);
+        $login = self::login($contestData['director']);
+        $r['auth_token'] = $login->auth_token;
 
         // Call API
         $response = ClarificationController::apiDetails($r);
@@ -94,7 +95,8 @@ class DetailsClarificationTest extends OmegaupTestCase {
         $r['clarification_id'] = $clarificationData['response']['clarification_id'];
 
         // Log in with the author of the clarification
-        $r['auth_token'] = $this->login($contestant);
+        $login = self::login($contestant);
+        $r['auth_token'] = $login->auth_token;
 
         // Call API
         $response = ClarificationController::apiDetails($r);
@@ -137,7 +139,8 @@ class DetailsClarificationTest extends OmegaupTestCase {
         $r['clarification_id'] = $clarificationData['response']['clarification_id'];
 
         // Log in with the author of the clarification
-        $r['auth_token'] = $this->login($contestant2);
+        $login = self::login($contestant2);
+        $r['auth_token'] = $login->auth_token;
 
         // Call API, will fail
         ClarificationController::apiDetails($r);
@@ -169,7 +172,7 @@ class DetailsClarificationTest extends OmegaupTestCase {
 
         // Manually set the just created clarification to PUBLIC
         $clarification = ClarificationsDAO::getByPK($clarificationData['response']['clarification_id']);
-        $clarification->setPublic('1');
+        $clarification->public = '1';
         ClarificationsDAO::save($clarification);
 
         // Prepare the request object
@@ -177,7 +180,8 @@ class DetailsClarificationTest extends OmegaupTestCase {
         $r['clarification_id'] = $clarificationData['response']['clarification_id'];
 
         // Log in with the author of the clarification
-        $r['auth_token'] = $this->login($contestant2);
+        $login = self::login($contestant2);
+        $r['auth_token'] = $login->auth_token;
 
         // Call API
         $response = ClarificationController::apiDetails($r);

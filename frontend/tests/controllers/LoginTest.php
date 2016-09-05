@@ -21,9 +21,9 @@ class LoginTest extends OmegaupTestCase {
 
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => $user->getUsername(),
-                    'password' => $user->getPassword()
-                ));
+            'usernameOrEmail' => $user->username,
+            'password' => $user->password
+        ));
 
         // Call the API
         $response = UserController::apiLogin($r);
@@ -47,9 +47,9 @@ class LoginTest extends OmegaupTestCase {
 
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => $email,
-                    'password' => $user->getPassword()
-                ));
+            'usernameOrEmail' => $email,
+            'password' => $user->password
+        ));
 
         $response = UserController::apiLogin($r);
 
@@ -68,9 +68,9 @@ class LoginTest extends OmegaupTestCase {
 
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => $user->getUsername(),
-                    'password' => 'badpasswordD:'
-                ));
+            'usernameOrEmail' => $user->username,
+            'password' => 'badpasswordD:'
+        ));
 
         // Call the API
         $response = UserController::apiLogin($r);
@@ -84,9 +84,9 @@ class LoginTest extends OmegaupTestCase {
     public function testNativeLoginByUserInvalidUsername() {
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => 'IDontExist',
-                    'password' => 'badpasswordD:'
-                ));
+            'usernameOrEmail' => 'IDontExist',
+            'password' => 'badpasswordD:'
+        ));
 
         // Call the API
         $response = UserController::apiLogin($r);
@@ -122,8 +122,8 @@ class LoginTest extends OmegaupTestCase {
         $user = UserFactory::createUser();
 
         // Set required context
-        $_REQUEST['usernameOrEmail'] = $user->getUsername();
-        $_REQUEST['password'] = $user->getPassword();
+        $_REQUEST['usernameOrEmail'] = $user->username;
+        $_REQUEST['password'] = $user->password;
 
         // Turn on flag to return auth_token in response, just to validate it
         $_REQUEST['returnAuthToken'] = true;
@@ -150,9 +150,9 @@ class LoginTest extends OmegaupTestCase {
 
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => $user->getUsername(),
-                    'password' => $user->getPassword()
-                ));
+            'usernameOrEmail' => $user->username,
+            'password' => $user->password
+        ));
 
         // Call the API
         $response1 = UserController::apiLogin($r);
@@ -176,19 +176,19 @@ class LoginTest extends OmegaupTestCase {
         // Create an user in omegaup
         $user = UserFactory::createUser();
 
-        $plainPassword = $user->getPassword();
+        $plainPassword = $user->password;
         // Set old password
-        $user->setPassword(md5($plainPassword));
+        $user->password = md5($plainPassword);
         UsersDAO::save($user);
 
         // Let's put back plain password
-        $user->setPassword($plainPassword);
+        $user->password = $plainPassword;
 
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => $user->getUsername(),
-                    'password' => $user->getPassword()
-                ));
+            'usernameOrEmail' => $user->username,
+            'password' => $user->password
+        ));
 
         // Call the API
         $response = UserController::apiLogin($r);
@@ -198,45 +198,18 @@ class LoginTest extends OmegaupTestCase {
         // Create an user in omegaup
         $user = UserFactory::createUser();
 
-        $auth_token = self::login($user);
+        $login = self::login($user);
 
         // Expire token manually
-        $auth_token_dao = AuthTokensDAO::getByPK($auth_token);
-        $auth_token_dao->setCreateTime(date('Y-m-d H:i:s', strtotime($auth_token_dao->getCreateTime() . ' - 9 hour')));
+        $auth_token_dao = AuthTokensDAO::getByPK($login->auth_token);
+        $auth_token_dao->create_time = date('Y-m-d H:i:s', strtotime($auth_token_dao->create_time . ' - 9 hour'));
         AuthTokensDAO::save($auth_token_dao);
 
         $auth_token_2 = self::login($user);
 
-        $existingTokens = AuthTokensDAO::getByPK($auth_token);
+        $existingTokens = AuthTokensDAO::getByPK($login->auth_token);
         $this->assertNull($existingTokens);
     }
-
-////	/**
-////	 * @expectedException EmailNotVerifiedException
-////	 */
-////	public function testLoginUserNotVerifiedWithVerificationId() {
-////
-////		// Create an user in omegaup
-////		$user = UserFactory::createUser(null, null, null, false/* verified */);
-////
-////		$auth_token = self::login($user);
-////	}
-
-////	/**
-////	 * @expectedException EmailNotVerifiedException
-////	 */
-////	public function testLoginUserNotVerifiedWithoutVerificationId() {
-////		// Create an user in omegaup
-////		$user = UserFactory::createUser(null, null, null, false/* verified */);
-////		$plainPass = $user->getPassword();
-////		$user->setVerificationId(null);
-////		$user->setPassword(md5($plainPass));
-////		UsersDAO::save($user);
-////
-////		$user->setPassword($plainPass);
-////
-////		$auth_token = self::login($user);
-////	}
 
     /**
      * Test SessionController::apiCurrentSession private_contests_count
@@ -250,10 +223,10 @@ class LoginTest extends OmegaupTestCase {
         $this->mockSessionManager();
 
         // Login
-        $auth_token = $this->login($user);
+        $login = self::login($user);
 
         // Prepare COOKIE as SessionMannager->getCookie expects
-        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $auth_token;
+        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $login->auth_token;
 
         // Call CurrentSession api
         $response = SessionController::apiCurrentSession();
@@ -273,10 +246,10 @@ class LoginTest extends OmegaupTestCase {
         $this->mockSessionManager();
 
         // Login
-        $auth_token = $this->login($user);
+        $login = self::login($user);
 
         // Prepare COOKIE as SessionMannager->getCookie expects
-        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $auth_token;
+        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $login->auth_token;
 
         // Call CurrentSession api
         $response = SessionController::apiCurrentSession();
@@ -294,10 +267,10 @@ class LoginTest extends OmegaupTestCase {
         $this->mockSessionManager();
 
         // Login
-        $auth_token = $this->login($user);
+        $login = self::login($user);
 
         // Prepare COOKIE as SessionMannager->getCookie expects
-        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $auth_token;
+        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $login->auth_token;
 
         // Call CurrentSession api
         $response = SessionController::apiCurrentSession();
@@ -317,10 +290,10 @@ class LoginTest extends OmegaupTestCase {
         $this->mockSessionManager();
 
         // Login
-        $auth_token = $this->login($user);
+        $login = self::login($user);
 
         // Prepare COOKIE as SessionMannager->getCookie expects
-        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $auth_token;
+        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $login->auth_token;
 
         // Call CurrentSession api
         $response = SessionController::apiCurrentSession();
@@ -340,10 +313,10 @@ class LoginTest extends OmegaupTestCase {
         $this->mockSessionManager();
 
         // Login
-        $auth_token = $this->login($user);
+        $login = self::login($user);
 
         // Prepare COOKIE as SessionMannager->getCookie expects
-        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $auth_token;
+        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $login->auth_token;
 
         // Call CurrentSession api
         $response = SessionController::apiCurrentSession();
@@ -361,10 +334,10 @@ class LoginTest extends OmegaupTestCase {
         $this->mockSessionManager();
 
         // Login
-        $auth_token = $this->login($user);
+        $login = self::login($user);
 
         // Prepare COOKIE as SessionMannager->getCookie expects
-        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $auth_token;
+        $_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME] = $login->auth_token;
 
         // Call CurrentSession api
         $response = SessionController::apiCurrentSession();
@@ -382,9 +355,9 @@ class LoginTest extends OmegaupTestCase {
         $user = UserFactory::createUser();
 
         // Force empty password
-        $user->setPassword('');
+        $user->password = '';
         UsersDAO::save($user);
 
-        $this->login($user);
+        self::login($user);
     }
 }

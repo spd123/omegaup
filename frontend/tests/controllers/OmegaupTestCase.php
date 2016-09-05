@@ -23,6 +23,31 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * tearDown function gets executed after each test (thanks to phpunit)
+     */
+    public function tearDown() {
+        parent::tearDown();
+        self::logout();
+    }
+
+    public static function logout() {
+        $session = new SessionController();
+        if ($session->CurrentSessionAvailable()) {
+            $session->InvalidateCache();
+        }
+        if (isset($_SESSION['omegaup_user'])) {
+            unset($_SESSION['omegaup_user']);
+        }
+        if (isset($_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME])) {
+            unset($_COOKIE[OMEGAUP_AUTH_TOKEN_COOKIE_NAME]);
+        }
+        if (isset($_REQUEST[OMEGAUP_AUTH_TOKEN_COOKIE_NAME])) {
+            unset($_REQUEST[OMEGAUP_AUTH_TOKEN_COOKIE_NAME]);
+        }
+        $session->InvalidateLocalCache();
+    }
+
+    /**
      * Override session_start, phpunit doesn't like it, but we still validate that it is called once
      */
     public function mockSessionManager() {
@@ -42,7 +67,7 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
     public function assertLogin(Users $user, $auth_token = null) {
         // Check auth token
         $authTokenKey = new AuthTokens(array(
-                    'user_id' => $user->getUserId()
+                    'user_id' => $user->user_id
                 ));
         $auth_tokens_bd = AuthTokensDAO::search($authTokenKey);
 
@@ -50,7 +75,7 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
         if (!is_null($auth_token)) {
             $exists = false;
             foreach ($auth_tokens_bd as $token_db) {
-                if (strcmp($token_db->getToken(), $auth_token) === 0) {
+                if (strcmp($token_db->token, $auth_token) === 0) {
                     $exists = true;
                     break;
                 }
@@ -67,7 +92,8 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
     /**
      * Logs in a user an returns the auth_token
      *
-     * @param Users $user
+     * @param Users $user the user to be logged in
+     *
      * @return string auth_token
      */
     public static function login(Users $user) {
@@ -79,9 +105,9 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
 
         // Inflate request with user data
         $r = new Request(array(
-                    'usernameOrEmail' => $user->getUsername(),
-                    'password' => $user->getPassword()
-                ));
+            'usernameOrEmail' => $user->username,
+            'password' => $user->password,
+        ));
 
         // Call the API
         $response = UserController::apiLogin($r);
@@ -95,7 +121,7 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
         // Set cookie setting as it was before the login
         SessionController::$setCookieOnRegisterSession = $oldCookieSetting;
 
-        return $response['auth_token'];
+        return new ScopedLoginToken($response['auth_token']);
     }
 
     /**
@@ -106,35 +132,35 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
     public function assertContest(Request $r) {
         // Validate that data was written to DB by getting the contest by title
         $contest = new Contests();
-        $contest->setTitle($r['title']);
+        $contest->title = $r['title'];
         $contests = ContestsDAO::search($contest);
         $contest = $contests[0];
 
         // Assert that we found our contest
         $this->assertNotNull($contest);
-        $this->assertNotNull($contest->getContestId());
+        $this->assertNotNull($contest->contest_id);
 
         // Assert data was correctly saved
-        $this->assertEquals($r['description'], $contest->getDescription());
+        $this->assertEquals($r['description'], $contest->description);
 
-        $this->assertGreaterThanOrEqual($r['start_time'] - 1, Utils::GetPhpUnixTimestamp($contest->getStartTime()));
-        $this->assertGreaterThanOrEqual($r['start_time'], Utils::GetPhpUnixTimestamp($contest->getStartTime()) + 1);
+        $this->assertGreaterThanOrEqual($r['start_time'] - 1, Utils::GetPhpUnixTimestamp($contest->start_time));
+        $this->assertGreaterThanOrEqual($r['start_time'], Utils::GetPhpUnixTimestamp($contest->start_time) + 1);
 
-        $this->assertGreaterThanOrEqual($r['finish_time'] - 1, Utils::GetPhpUnixTimestamp($contest->getFinishTime()));
-        $this->assertGreaterThanOrEqual($r['finish_time'], Utils::GetPhpUnixTimestamp($contest->getFinishTime()) + 1);
+        $this->assertGreaterThanOrEqual($r['finish_time'] - 1, Utils::GetPhpUnixTimestamp($contest->finish_time));
+        $this->assertGreaterThanOrEqual($r['finish_time'], Utils::GetPhpUnixTimestamp($contest->finish_time) + 1);
 
-        $this->assertEquals($r['window_length'], $contest->getWindowLength());
-        $this->assertEquals($r['public'], $contest->getPublic());
-        $this->assertEquals($r['alias'], $contest->getAlias());
-        $this->assertEquals($r['points_decay_factor'], $contest->getPointsDecayFactor());
-        $this->assertEquals($r['partial_score'], $contest->getPartialScore());
-        $this->assertEquals($r['submissions_gap'], $contest->getSubmissionsGap());
-        $this->assertEquals($r['feedback'], $contest->getFeedback());
-        $this->assertEquals($r['penalty'], $contest->getPenalty());
-        $this->assertEquals($r['scoreboard'], $contest->getScoreboard());
+        $this->assertEquals($r['window_length'], $contest->window_length);
+        $this->assertEquals($r['public'], $contest->public);
+        $this->assertEquals($r['alias'], $contest->alias);
+        $this->assertEquals($r['points_decay_factor'], $contest->points_decay_factor);
+        $this->assertEquals($r['partial_score'], $contest->partial_score);
+        $this->assertEquals($r['submissions_gap'], $contest->submissions_gap);
+        $this->assertEquals($r['feedback'], $contest->feedback);
+        $this->assertEquals($r['penalty'], $contest->penalty);
+        $this->assertEquals($r['scoreboard'], $contest->scoreboard);
         $this->assertEquals($r['penalty_type'], $contest->penalty_type);
-        $this->assertEquals($r['penalty_calc_policy'], $contest->getPenaltyCalcPolicy());
-        $this->assertEquals($r['recommended'], $contest->getRecommended());
+        $this->assertEquals($r['penalty_calc_policy'], $contest->penalty_calc_policy);
+        $this->assertEquals($r['recommended'], $contest->recommended);
     }
 
     /**
@@ -315,5 +341,27 @@ class OmegaupTestCase extends PHPUnit_Framework_TestCase {
         }
 
         self::$logObj->info('[INFO] ' . $message);
+    }
+}
+
+/**
+ * Simple RAII class that logs out as soon as it goes out of scope.
+ */
+class ScopedLoginToken {
+    public $auth_token = null;
+
+    public function __construct($auth_token) {
+        $this->auth_token = $auth_token;
+    }
+
+    public function __destruct() {
+        OmegaUpTestCase::logout();
+    }
+
+    // TODO: Delete this function. The existence of this allows for sessions to
+    // be stored longer than intended since they will be added to Request
+    // objects and then still maybe not cleaned up.
+    public function __toString() {
+        return $this->auth_token;
     }
 }

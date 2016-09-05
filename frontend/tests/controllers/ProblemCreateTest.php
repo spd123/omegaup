@@ -18,7 +18,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -33,7 +33,7 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify data in DB
         $problem_mask = new Problems();
-        $problem_mask->setTitle($r['title']);
+        $problem_mask->title = $r['title'];
         $problems = ProblemsDAO::search($problem_mask);
 
         // Check that we only retreived 1 element
@@ -42,26 +42,26 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify contest was found
         $this->assertNotNull($problem);
-        $this->assertNotNull($problem->getProblemId());
+        $this->assertNotNull($problem->problem_id);
 
         // Verify DB data
-        $this->assertEquals($r['title'], $problem->getTitle());
-        $this->assertEquals(substr($r['title'], 0, 32), $problem->getAlias());
-        $this->assertEquals($r['validator'], $problem->getValidator());
-        $this->assertEquals($r['time_limit'], $problem->getTimeLimit());
-        $this->assertEquals($r['memory_limit'], $problem->getMemoryLimit());
-        $this->assertEquals($r['order'], $problem->getOrder());
-        $this->assertEquals($r['source'], $problem->getSource());
-        $this->assertEqualSets($r['languages'], $problem->getLanguages());
+        $this->assertEquals($r['title'], $problem->title);
+        $this->assertEquals(substr($r['title'], 0, 32), $problem->alias);
+        $this->assertEquals($r['validator'], $problem->validator);
+        $this->assertEquals($r['time_limit'], $problem->time_limit);
+        $this->assertEquals($r['memory_limit'], $problem->memory_limit);
+        $this->assertEquals($r['order'], $problem->order);
+        $this->assertEquals($r['source'], $problem->source);
+        $this->assertEqualSets($r['languages'], $problem->languages);
         $this->assertEquals(0, $problem->slow);
         $this->assertEquals(10000, $problem->stack_limit);
 
         // Verify author username -> author id conversion
-        $user = UsersDAO::getByPK($problem->getAuthorId());
-        $this->assertEquals($user->getUsername(), $r['author_username']);
+        $user = UsersDAO::getByPK($problem->author_id);
+        $this->assertEquals($user->username, $r['author_username']);
 
         // Verify problem contents were copied
-        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->getAlias() . DIRECTORY_SEPARATOR;
+        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->alias . DIRECTORY_SEPARATOR;
 
         $this->assertFileExists($targetpath . 'testplan');
         $this->assertFileExists($targetpath . 'cases');
@@ -69,10 +69,10 @@ class CreateProblemTest extends OmegaupTestCase {
         $this->assertFileExists($targetpath . 'statements' . DIRECTORY_SEPARATOR . 'en.markdown');
 
         // Default data
-        $this->assertEquals(0, $problem->getVisits());
-        $this->assertEquals(0, $problem->getSubmissions());
-        $this->assertEquals(0, $problem->getAccepted());
-        $this->assertEquals(0, $problem->getDifficulty());
+        $this->assertEquals(0, $problem->visits);
+        $this->assertEquals(0, $problem->submissions);
+        $this->assertEquals(0, $problem->accepted);
+        $this->assertEquals(0, $problem->difficulty);
     }
 
     /**
@@ -86,7 +86,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -101,7 +101,7 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify data in DB
         $problem_mask = new Problems();
-        $problem_mask->setTitle($r['title']);
+        $problem_mask->title = $r['title'];
         $problems = ProblemsDAO::search($problem_mask);
 
         // Check that we only retreived 1 element
@@ -127,7 +127,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -142,7 +142,7 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify data in DB
         $problem_mask = new Problems();
-        $problem_mask->setTitle($r['title']);
+        $problem_mask->title = $r['title'];
         $problems = ProblemsDAO::search($problem_mask);
 
         // Check that we only retreived 1 element
@@ -166,7 +166,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -214,7 +214,7 @@ class CreateProblemTest extends OmegaupTestCase {
             $problemAuthor = $problemData['author'];
 
             // Login user
-            $r['auth_token'] = $this->login($problemAuthor);
+            $r['auth_token'] = self::login($problemAuthor);
 
             // Unset key
             unset($r[$key]);
@@ -246,7 +246,7 @@ class CreateProblemTest extends OmegaupTestCase {
             $problemAuthor = $problemData['author'];
 
             // Login user
-            $r['auth_token'] = $this->login($problemAuthor);
+            $r['auth_token'] = self::login($problemAuthor);
             $r['languages'] = $languages;
             try {
                 // Call the API
@@ -270,7 +270,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -285,7 +285,7 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify data in DB
         $problem_mask = new Problems();
-        $problem_mask->setTitle($r['title']);
+        $problem_mask->title = $r['title'];
         $problems = ProblemsDAO::search($problem_mask);
 
         // Check that we only retreived 1 element
@@ -294,32 +294,32 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify contest was found
         $this->assertNotNull($problem);
-        $this->assertNotNull($problem->getProblemId());
+        $this->assertNotNull($problem->problem_id);
 
         // Verify DB data
-        $this->assertEquals($r['title'], $problem->getTitle());
-        $this->assertEquals(substr($r['title'], 0, 32), $problem->getAlias());
-        $this->assertEquals($r['validator'], $problem->getValidator());
-        $this->assertEquals($r['time_limit'], $problem->getTimeLimit());
-        $this->assertEquals($r['memory_limit'], $problem->getMemoryLimit());
-        $this->assertEquals($r['order'], $problem->getOrder());
-        $this->assertEquals($r['source'], $problem->getSource());
+        $this->assertEquals($r['title'], $problem->title);
+        $this->assertEquals(substr($r['title'], 0, 32), $problem->alias);
+        $this->assertEquals($r['validator'], $problem->validator);
+        $this->assertEquals($r['time_limit'], $problem->time_limit);
+        $this->assertEquals($r['memory_limit'], $problem->memory_limit);
+        $this->assertEquals($r['order'], $problem->order);
+        $this->assertEquals($r['source'], $problem->source);
 
         // Verify author username -> author id conversion
-        $user = UsersDAO::getByPK($problem->getAuthorId());
-        $this->assertEquals($user->getUsername(), $r['author_username']);
+        $user = UsersDAO::getByPK($problem->author_id);
+        $this->assertEquals($user->username, $r['author_username']);
 
         // Verify problem contents were copied
-        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->getAlias() . DIRECTORY_SEPARATOR;
+        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->alias . DIRECTORY_SEPARATOR;
 
         $this->assertFileExists($targetpath . 'cases');
         $this->assertFileExists($targetpath . 'statements' . DIRECTORY_SEPARATOR . 'es.html');
 
         // Default data
-        $this->assertEquals(0, $problem->getVisits());
-        $this->assertEquals(0, $problem->getSubmissions());
-        $this->assertEquals(0, $problem->getAccepted());
-        $this->assertEquals(0, $problem->getDifficulty());
+        $this->assertEquals(0, $problem->visits);
+        $this->assertEquals(0, $problem->submissions);
+        $this->assertEquals(0, $problem->accepted);
+        $this->assertEquals(0, $problem->difficulty);
     }
 
     /**
@@ -332,7 +332,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -345,13 +345,13 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Get problem info from DB
         $problem_mask = new Problems();
-        $problem_mask->setTitle($r['title']);
+        $problem_mask->title = $r['title'];
         $problems = ProblemsDAO::search($problem_mask);
         $this->assertEquals(1, count($problems));
         $problem = $problems[0];
 
         // Verify problem contents were copied
-        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->getAlias() . DIRECTORY_SEPARATOR;
+        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->alias . DIRECTORY_SEPARATOR;
         $this->assertFileExists($targetpath . 'cases');
         $this->assertFileExists($targetpath . 'statements' . DIRECTORY_SEPARATOR . 'es.html');
         $this->assertFileExists($targetpath . 'statements' . DIRECTORY_SEPARATOR . 'es.markdown');
@@ -382,7 +382,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -431,7 +431,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $r['title'] = 'Lá Venganza Del Malvado Dr. Liraaa';
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -446,7 +446,7 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify data in DB
         $problem_mask = new Problems();
-        $problem_mask->setTitle($r['title']);
+        $problem_mask->title = $r['title'];
         $problems = ProblemsDAO::search($problem_mask);
 
         // Check that we only retreived 1 element
@@ -455,13 +455,13 @@ class CreateProblemTest extends OmegaupTestCase {
 
         // Verify contest was found
         $this->assertNotNull($problem);
-        $this->assertNotNull($problem->getProblemId());
+        $this->assertNotNull($problem->problem_id);
 
         // Verify DB data
-        $this->assertEquals($r['title'], $problem->getTitle());
+        $this->assertEquals($r['title'], $problem->title);
 
         // Verify problem contents were copied
-        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->getAlias() . DIRECTORY_SEPARATOR;
+        $targetpath = PROBLEMS_PATH . DIRECTORY_SEPARATOR . $problem->alias . DIRECTORY_SEPARATOR;
 
         $this->assertFileExists($targetpath . 'testplan');
         $this->assertFileExists($targetpath . 'cases');
@@ -480,7 +480,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());
@@ -501,7 +501,7 @@ class CreateProblemTest extends OmegaupTestCase {
         $problemAuthor = $problemData['author'];
 
         // Login user
-        $r['auth_token'] = $this->login($problemAuthor);
+        $r['auth_token'] = self::login($problemAuthor);
 
         // Get File Uploader Mock and tell Omegaup API to use it
         FileHandler::SetFileUploader($this->createFileUploaderMock());

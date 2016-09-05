@@ -9,8 +9,8 @@
 
 		<script type="text/javascript" src="/js/jquery.js?ver=198b3f"></script>
 
-		<script type="text/javascript" src="/js/omegaup.js?ver=6ebc21"></script>
-		<script type="text/javascript" src="/js/lang.{#locale#}.js?ver=a0e243,7073ff,450748,4ec882"></script>
+		<script type="text/javascript" src="/js/omegaup.js?ver=0ff160"></script>
+		<script type="text/javascript" src="/js/lang.{#locale#}.js?ver=9f6f64,87ec3e,c924c0,4379f1"></script>
 
 		<script type="text/javascript" src="/js/sugar.js?ver=171bac"></script>
 		<script type="text/javascript" src="/js/highstock.js?ver=6e7575"></script>

@@ -20,7 +20,6 @@
 </div>
 
 <div class="panel panel-primary">
-<!-- remove show_user -->
 {include file='arena.runs.tpl' show_pager=true show_points=true show_user=true show_problem=true show_rejudge=true show_details=true}
 </div>
 

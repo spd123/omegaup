@@ -6,7 +6,11 @@ class InterviewController extends Controller {
         $is_required = !$is_update;
 
         // Only site-admins and interviewers can create interviews for now
+<<<<<<< HEAD
         if (!Authorization::IsSystemAdmin($r['current_user_id']) && !UsersDAO::IsUserInterviewer($r['current_user']->getUserId())) {
+=======
+        if (!Authorization::IsSystemAdmin($r['current_user_id']) && !UsersDAO::IsUserInterviewer($r['current_user']->user_id)) {
+>>>>>>> master
             throw new ForbiddenAccessException();
         }
 
@@ -108,15 +112,23 @@ class InterviewController extends Controller {
             $newUserRequest['username'] = UserController::makeUsernameFromEmail($r['usernameOrEmail']);
             $newUserRequest['password'] = self::randomString(8);
             $newUserRequest['skip_verification_email'] = 1;
+<<<<<<< HEAD
             //UserController::$permissionKey = $newUserRequest['permission_key'] = self::randomString(32);
+=======
+>>>>>>> master
 
             UserController::apiCreate($newUserRequest);
 
             // Email to new OmegaUp users
             $r['mail_body'] = $smarty->getConfigVariable('interviewInvitationEmailBodyIntro')
                            . '<br>'
+<<<<<<< HEAD
                            . ' <a href="https://omegaup.com/api/user/verifyemail/id/' . $newUserRequest['user']->getVerificationId() . '/redirecttointerview/' . $r['contest']->getAlias() . '">'
                            . ' https://omegaup.com/api/user/verifyemail/id/' . $newUserRequest['user']->getVerificationId() . '/redirecttointerview/' . $r['contest']->getAlias() . '</a>'
+=======
+                           . ' <a href="https://omegaup.com/api/user/verifyemail/id/' . $newUserRequest['user']->verification_id . '/redirecttointerview/' . $r['contest']->alias . '">'
+                           . ' https://omegaup.com/api/user/verifyemail/id/' . $newUserRequest['user']->verification_id . '/redirecttointerview/' . $r['contest']->alias . '</a>'
+>>>>>>> master
                            . '<br>';
 
             $r['mail_body'] .= $smarty->getConfigVariable('interviewUseTheFollowingLoginInfoEmail')
@@ -134,8 +146,13 @@ class InterviewController extends Controller {
         } else {
             // Email to current OmegaUp user
             $r['mail_body'] = $smarty->getConfigVariable('interviewInvitationEmailBodyIntro')
+<<<<<<< HEAD
                            . ' <a href="https://omegaup.com/interview/' . $r['contest']->getAlias() . '/arena">'
                            . ' https://omegaup.com/interview/' . $r['contest']->getAlias() . '/arena</a>';
+=======
+                           . ' <a href="https://omegaup.com/interview/' . $r['contest']->alias . '/arena">'
+                           . ' https://omegaup.com/interview/' . $r['contest']->alias . '/arena</a>';
+>>>>>>> master
         }
 
         if (is_null($r['user'])) {
@@ -149,11 +166,19 @@ class InterviewController extends Controller {
 
         // add the user to the interview (contest)
         $contestUser = new ContestsUsers();
+<<<<<<< HEAD
         $contestUser->setContestId($r['contest']->getContestId());
         $contestUser->setUserId($r['user']->getUserId());
         $contestUser->setAccessTime('0000-00-00 00:00:00');
         $contestUser->setScore('0');
         $contestUser->setTime('0');
+=======
+        $contestUser->contest_id = $r['contest']->contest_id;
+        $contestUser->user_id = $r['user']->user_id;
+        $contestUser->access_time = '0000-00-00 00:00:00';
+        $contestUser->score = '0';
+        $contestUser->time = '0';
+>>>>>>> master
 
         try {
             ContestsUsersDAO::save($contestUser);
@@ -164,7 +189,11 @@ class InterviewController extends Controller {
         }
 
         try {
+<<<<<<< HEAD
             $r['email'] = EmailsDAO::getByPK($r['user']->getMainEmailId());
+=======
+            $r['email'] = EmailsDAO::getByPK($r['user']->main_email_id);
+>>>>>>> master
         } catch (Exception $e) {
             throw new InvalidDatabaseOperationException($e);
         }
@@ -200,7 +229,11 @@ class InterviewController extends Controller {
         $thisResult['contest_alias'] = $backingContest->alias;
 
         $candidatesQuery = new ContestsUsers();
+<<<<<<< HEAD
         $candidatesQuery->setContestId($backingContest->contest_id);
+=======
+        $candidatesQuery->contest_id = $backingContest->contest_id;
+>>>>>>> master
 
         try {
             $db_results = ContestsUsersDAO::search($candidatesQuery);
@@ -214,11 +247,19 @@ class InterviewController extends Controller {
         // Add all users to an array
         foreach ($db_results as $result) {
             // @TODO: Slow queries ahead
+<<<<<<< HEAD
             $user_id = $result->getUserId();
             $user = UsersDAO::getByPK($user_id);
 
             try {
                 $email = EmailsDAO::getByPK($user->getMainEmailId());
+=======
+            $user_id = $result->user_id;
+            $user = UsersDAO::getByPK($user_id);
+
+            try {
+                $email = EmailsDAO::getByPK($user->main_email_id);
+>>>>>>> master
             } catch (Exception $e) {
                 throw new InvalidDatabaseOperationException($e);
             }
@@ -226,11 +267,19 @@ class InterviewController extends Controller {
             $userOpenedContest = UserController::userOpenedContest($backingContest->contest_id, $user_id);
             $users[] = array(
                         'user_id' => $user_id,
+<<<<<<< HEAD
                         'username' => $user->getUsername(),
                         'access_time' => $result->access_time,
                         'email' => $email->getEmail(),
                         'opened_interview' => $userOpenedContest,
                         'country' => $user->getCountryId());
+=======
+                        'username' => $user->username,
+                        'access_time' => $result->access_time,
+                        'email' => $email->email,
+                        'opened_interview' => $userOpenedContest,
+                        'country' => $user->country_id);
+>>>>>>> master
         }
 
         $thisResult['users'] = $users;
