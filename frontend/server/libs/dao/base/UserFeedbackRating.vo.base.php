@@ -9,19 +9,19 @@
   * ******************************************************************************* */
 
 /** Value Object file for table UserFeedbackRating.
-  *
+  * 
   * VO does not have any behaviour.
   * @access public
-  *
+  * 
   */
 
 class UserFeedbackRating extends VO
 {
 	/**
 	  * Constructor de UserFeedbackRating
-	  *
-	  * Para construir un objeto de tipo UserFeedbackRating debera llamarse a el constructor
-	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo
+	  * 
+	  * Para construir un objeto de tipo UserFeedbackRating debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
 	  */
 	function __construct($data = NULL)
@@ -30,6 +30,7 @@ class UserFeedbackRating extends VO
 		{
 			if (is_string($data))
 				$data = self::object_to_array(json_decode($data));
+
 
 			if (isset($data['rating_id'])) {
 				$this->rating_id = $data['rating_id'];
@@ -46,30 +47,30 @@ class UserFeedbackRating extends VO
 			if (isset($data['create_date'])) {
 				$this->create_date = $data['create_date'];
 			}
-			if (isset($data['raiting'])) {
-				$this->raiting = $data['raiting'];
+			if (isset($data['rating'])) {
+				$this->rating = $data['rating'];
 			}
 		}
 	}
 
 	/**
 	  * Obtener una representacion en String
-	  *
+	  * 
 	  * Este metodo permite tratar a un objeto UserFeedbackRating en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
-	  * @return String
+	  * @return String 
 	  */
 	public function __toString( )
-	{
-		$vec = array(
+	{ 
+		$vec = array( 
 			"rating_id" => $this->rating_id,
 			"user_id" => $this->user_id,
 			"problem_id" => $this->problem_id,
 			"contest_id" => $this->contest_id,
 			"create_date" => $this->create_date,
-			"raiting" => $this->raiting
-		);
-	return json_encode($vec);
+			"rating" => $this->rating
+		); 
+	return json_encode($vec); 
 	}
 
 	/**
@@ -124,5 +125,5 @@ class UserFeedbackRating extends VO
 	  * @access public
 	  * @var tinyint
 	  */
-	public $raiting;
+	public $rating;
 }

@@ -776,11 +776,11 @@ CREATE TABLE IF NOT EXISTS `UserFeedbackRating` (
 		`problem_id` int(11) NULL,
 		`contest_id` int(11) NULL,
 		`create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		`raiting` tinyint UNSIGNED NOT NULL,
+		`rating` tinyint UNSIGNED NOT NULL,
 		PRIMARY KEY (`rating_id`),
 		KEY idx_rating_problem (`user_id`, `problem_id`),
 		KEY idx_rating_contest (`user_id`, `contest_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda raitings de usuarios a objetos de omegaUp' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda ratings de usuarios a objetos de omegaUp' AUTO_INCREMENT=1 ;
 
 --
 -- Restricciones para tablas volcadas
