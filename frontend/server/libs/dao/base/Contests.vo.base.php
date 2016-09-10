@@ -106,6 +106,9 @@ class Contests extends VO
 			if (isset($data['recommended'])) {
 				$this->recommended = $data['recommended'];
 			}
+			if (isset($data['rating'])) {
+				$this->rating = $data['rating'];
+			}
 		}
 	}
 
@@ -143,7 +146,8 @@ class Contests extends VO
 			"urgent" => $this->urgent,
 			"contestant_must_register" => $this->contestant_must_register,
 			"languages" => $this->languages,
-			"recommended" => $this->recommended
+			"recommended" => $this->recommended,
+			"rating" => $this->rating
 		);
 	return json_encode($vec);
 	}
@@ -334,4 +338,11 @@ class Contests extends VO
 	  * @var BOOL
 	  */
 	public $recommended;
+
+	/**
+	  * Rating calulado para el concurso
+	  * @access public
+	  * @var tinyint
+	  */
+	public $rating;
 }

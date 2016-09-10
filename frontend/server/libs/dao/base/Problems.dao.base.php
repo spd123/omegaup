@@ -236,6 +236,10 @@ abstract class ProblemsDAOBase extends DAO
 			$sql .= " `email_clarifications` = ? AND";
 			array_push( $val, $Problems->email_clarifications );
 		}
+		if (!is_null( $Problems->rating)) {
+			$sql .= " `rating` = ? AND";
+			array_push( $val, $Problems->rating );
+		}
 		if (!is_null($likeColumns)) {
 			foreach ($likeColumns as $column => $value) {
 				$escapedValue = mysql_real_escape_string($value);
@@ -271,7 +275,7 @@ abstract class ProblemsDAOBase extends DAO
 	  **/
 	private static final function update($Problems)
 	{
-		$sql = "UPDATE Problems SET  `public` = ?, `author_id` = ?, `title` = ?, `alias` = ?, `validator` = ?, `languages` = ?, `server` = ?, `remote_id` = ?, `time_limit` = ?, `validator_time_limit` = ?, `overall_wall_time_limit` = ?, `extra_wall_time` = ?, `memory_limit` = ?, `output_limit` = ?, `stack_limit` = ?, `visits` = ?, `submissions` = ?, `accepted` = ?, `difficulty` = ?, `creation_date` = ?, `source` = ?, `order` = ?, `tolerance` = ?, `slow` = ?, `deprecated` = ?, `email_clarifications` = ? WHERE  `problem_id` = ?;";
+		$sql = "UPDATE Problems SET  `public` = ?, `author_id` = ?, `title` = ?, `alias` = ?, `validator` = ?, `languages` = ?, `server` = ?, `remote_id` = ?, `time_limit` = ?, `validator_time_limit` = ?, `overall_wall_time_limit` = ?, `extra_wall_time` = ?, `memory_limit` = ?, `output_limit` = ?, `stack_limit` = ?, `visits` = ?, `submissions` = ?, `accepted` = ?, `difficulty` = ?, `creation_date` = ?, `source` = ?, `order` = ?, `tolerance` = ?, `slow` = ?, `deprecated` = ?, `email_clarifications` = ?, `rating` = ? WHERE  `problem_id` = ?;";
 		$params = array(
 			$Problems->public,
 			$Problems->author_id,
@@ -299,6 +303,7 @@ abstract class ProblemsDAOBase extends DAO
 			$Problems->slow,
 			$Problems->deprecated,
 			$Problems->email_clarifications,
+			$Problems->rating,
 			$Problems->problem_id, );
 		global $conn;
 		$conn->Execute($sql, $params);
@@ -339,7 +344,8 @@ abstract class ProblemsDAOBase extends DAO
 		if (is_null($Problems->slow)) $Problems->slow = 0;
 		if (is_null($Problems->deprecated)) $Problems->deprecated = 0;
 		if (is_null($Problems->email_clarifications)) $Problems->email_clarifications = 0;
-		$sql = "INSERT INTO Problems ( `problem_id`, `public`, `author_id`, `title`, `alias`, `validator`, `languages`, `server`, `remote_id`, `time_limit`, `validator_time_limit`, `overall_wall_time_limit`, `extra_wall_time`, `memory_limit`, `output_limit`, `stack_limit`, `visits`, `submissions`, `accepted`, `difficulty`, `creation_date`, `source`, `order`, `tolerance`, `slow`, `deprecated`, `email_clarifications` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		if (is_null($Problems->rating)) $Problems->rating = 3;
+		$sql = "INSERT INTO Problems ( `problem_id`, `public`, `author_id`, `title`, `alias`, `validator`, `languages`, `server`, `remote_id`, `time_limit`, `validator_time_limit`, `overall_wall_time_limit`, `extra_wall_time`, `memory_limit`, `output_limit`, `stack_limit`, `visits`, `submissions`, `accepted`, `difficulty`, `creation_date`, `source`, `order`, `tolerance`, `slow`, `deprecated`, `email_clarifications`, `rating` ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array(
 			$Problems->problem_id,
 			$Problems->public,
@@ -368,6 +374,7 @@ abstract class ProblemsDAOBase extends DAO
 			$Problems->slow,
 			$Problems->deprecated,
 			$Problems->email_clarifications,
+			$Problems->rating,
 		 );
 		global $conn;
 		$conn->Execute($sql, $params);
@@ -681,6 +688,16 @@ abstract class ProblemsDAOBase extends DAO
 				array_push( $val, max($a,$b));
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
 			$sql .= " `email_clarifications` = ? AND";
+			$a = is_null ( $a ) ? $b : $a;
+			array_push( $val, $a);
+		}
+
+		if( ( !is_null (($a = $ProblemsA->rating) ) ) & ( ! is_null ( ($b = $ProblemsB->rating) ) ) ){
+				$sql .= " `rating` >= ? AND `rating` <= ? AND";
+				array_push( $val, min($a,$b));
+				array_push( $val, max($a,$b));
+		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
+			$sql .= " `rating` = ? AND";
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 		}
