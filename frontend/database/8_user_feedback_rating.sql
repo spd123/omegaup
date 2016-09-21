@@ -1,21 +1,30 @@
-CREATE TABLE IF NOT EXISTS `UserFeedbackRating` (
-		`rating_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `Entity_Feedback_Features` (
+		`feature_id` int(11) NOT NULL AUTO_INCREMENT,
+		`entity_type` ENUM ('Problem', 'Contest') NOT NULL,
+		`name` varchar(45) NOT NULL,
+		PRIMARY KEY (`feature_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda los features que pueden ser votados en cierta entidad' AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `User_Feedback_Rating` (
 		`user_id` int(11) NOT NULL,
-		`problem_id` int(11) NULL,
-		`contest_id` int(11) NULL,
+		`entity_id` int(11) NOT NULL,
+		`feature_id` int(11) NOT NULL,
 		`create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		`rating` tinyint UNSIGNED NOT NULL,
-		PRIMARY KEY (`rating_id`),
-		KEY idx_rating_problem (`user_id`, `problem_id`),
-		KEY idx_rating_contest (`user_id`, `contest_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda raitings de usuarios a objetos de omegaUp' AUTO_INCREMENT=1 ;
+		`rating` float(2,2) NOT NULL,
+		`comments` text, 
+		PRIMARY KEY (`user_id`, `entity_id`, `feature_id`),
+		FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+		FOREIGN KEY (`feature_id`) REFERENCES `Entity_Feedback_Features` (`feature_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda ratings de usuarios a objetos de omegaUp' AUTO_INCREMENT=1 ;
 
-ALTER TABLE `UserFeedbackRating`
-  ADD CONSTRAINT `fk_ufr_user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+CREATE TABLE IF NOT EXISTS `Entity_Feedback_Rating` (
+		`feature_id` int(11) NOT NULL,
+		`entity_id` int(11) NOT NULL,
+		`rating` float(2,2) NOT NULL,
+		PRIMARY KEY (`feature_id`, `entity_id`),
+		FOREIGN KEY (`feature_id`) REFERENCES `Entity_Feedback_Features` (`feature_id`) ON DELETE NO ACTION ON UPDATE NO ACTION 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda el rating calculado a cada entidad';
 
-ALTER TABLE `UserFeedbackRating`
-	ADD CONSTRAINT `fk_ufr_problem_id` FOREIGN KEY (`problem_id`) REFERENCES `Problems` (`problem_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `UserFeedbackRating`
-	ADD CONSTRAINT `fk_ufr_contest_id` FOREIGN KEY (`contest_id`) REFERENCES `Contests` (`contest_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 

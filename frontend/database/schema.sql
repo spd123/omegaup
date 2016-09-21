@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `Contests` (
   `contestant_must_register`   tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indica que los participantes deben pre-registrarse antes de poder paticipar',
   `languages` set('c','cpp','java','py','rb','pl','cs','pas','kp','kj','cat','hs','cpp11') DEFAULT NULL COMMENT 'Un filtro (opcional) de qué lenguajes se pueden usar en un concurso',
   `recommended` BOOL NOT NULL DEFAULT  '0' COMMENT  'Mostrar el concurso en la lista de recomendados.',
-	`rating` tinyint NOT NULL DEFAULT 3 COMMENT 'Rating calulado para el concurso',
+	`rating` float(2,2) NOT NULL DEFAULT '3.0' COMMENT 'Rating calulado para el concurso',
   PRIMARY KEY (`contest_id`),
   KEY `director_id` (`director_id`),
   KEY `rerun_id` (`contest_id`),
@@ -435,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `Problems` (
   `slow` tinyint(1) NOT NULL DEFAULT 0,
   `deprecated` tinyint(1) NOT NULL DEFAULT 0,
   `email_clarifications` tinyint(1) NOT NULL DEFAULT 0,
-	`rating` tinyint NOT NULL DEFAULT 3,
+	`rating` float(2,2) NOT NULL DEFAULT '3.0',
   PRIMARY KEY (`problem_id`),
   KEY `author_id` (`author_id`),
   UNIQUE KEY `problems_alias` (`alias`)
@@ -768,19 +768,41 @@ CREATE TABLE IF NOT EXISTS `Run_Counts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda la cantidad de runs que se han realizado hasta la fecha.';
 
 --
--- Estructura de tabla para `UserFeedbackRating`
+-- Estructura de tabla para `Entity_Feedback_Features`
 --
-CREATE TABLE IF NOT EXISTS `UserFeedbackRating` (
-		`rating_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `Entity_Feedback_Features` (
+		`feature_id` int(11) NOT NULL AUTO_INCREMENT,
+		`entity_type` ENUM ('Problem', 'Contest') NOT NULL,
+		`name` varchar(45) NOT NULL,
+		PRIMARY KEY (`feature_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda los features que pueden ser votados en cierta entidad' AUTO_INCREMENT=1;
+
+--
+-- Estructura de tabla para `User_Feedback_Rating`
+--
+CREATE TABLE IF NOT EXISTS `User_Feedback_Rating` (
 		`user_id` int(11) NOT NULL,
-		`problem_id` int(11) NULL,
-		`contest_id` int(11) NULL,
+		`entity_id` int(11) NOT NULL,
+		`feature_id` int(11) NOT NULL,
 		`create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		`rating` tinyint UNSIGNED NOT NULL,
-		PRIMARY KEY (`rating_id`),
-		KEY idx_rating_problem (`user_id`, `problem_id`),
-		KEY idx_rating_contest (`user_id`, `contest_id`)
+		`rating` float(2,2) NOT NULL,
+		`comments` text, 
+		PRIMARY KEY (`user_id`, `entity_id`, `feature_id`),
+		FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+		FOREIGN KEY (`feature_id`) REFERENCES `Entity_Feedback_Features` (`feature_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda ratings de usuarios a objetos de omegaUp' AUTO_INCREMENT=1 ;
+
+--
+-- Estructura de tabla para `Entity_Feedback_Rating`
+--
+CREATE TABLE IF NOT EXISTS `Entity_Feedback_Rating` (
+		`feature_id` int(11) NOT NULL,
+		`entity_id` int(11) NOT NULL,
+		`rating` float(2,2) NOT NULL,
+		PRIMARY KEY (`feature_id`, `entity_id`),
+		FOREIGN KEY (`feature_id`) REFERENCES `Entity_Feedback_Features` (`feature_id`) ON DELETE NO ACTION ON UPDATE NO ACTION 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Guarda el rating calculado a cada entidad';
+
 
 --
 -- Restricciones para tablas volcadas
@@ -1015,13 +1037,13 @@ ALTER TABLE `Groups_Scoreboards_Contests`
   ADD CONSTRAINT `fk_gsc_contest_id` FOREIGN KEY (`contest_id`) REFERENCES `Contests` (`contest_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_gsc_group_scoreboard_id` FOREIGN KEY (`group_scoreboard_id`) REFERENCES `Groups_Scoreboards` (`group_scoreboard_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `UserFeedbackRating`
+ALTER TABLE `User_Feedback_Rating`
   ADD CONSTRAINT `fk_ufr_user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `UserFeedbackRating`
+ALTER TABLE `User_Feedback_Rating`
 	ADD CONSTRAINT `fk_ufr_problem_id` FOREIGN KEY (`problem_id`) REFERENCES `Problems` (`problem_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `UserFeedbackRating`
+ALTER TABLE `User_Feedback_Rating`
 	ADD CONSTRAINT `fk_ufr_contest_id` FOREIGN KEY (`contest_id`) REFERENCES `Contests` (`contest_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
