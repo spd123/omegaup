@@ -8,19 +8,19 @@
   *                                                                                 *
   * ******************************************************************************* */
 
-/** Value Object file for table User_Rank.
+/** Value Object file for table Entity_Feedback_Features.
   * 
   * VO does not have any behaviour.
   * @access public
   * 
   */
 
-class UserRank extends VO
+class EntityFeedbackFeatures extends VO
 {
 	/**
-	  * Constructor de UserRank
+	  * Constructor de EntityFeedbackFeatures
 	  * 
-	  * Para construir un objeto de tipo UserRank debera llamarse a el constructor 
+	  * Para construir un objeto de tipo EntityFeedbackFeatures debera llamarse a el constructor 
 	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
 	  */
@@ -32,26 +32,14 @@ class UserRank extends VO
 				$data = self::object_to_array(json_decode($data));
 
 
-			if (isset($data['user_id'])) {
-				$this->user_id = $data['user_id'];
+			if (isset($data['feature_id'])) {
+				$this->feature_id = $data['feature_id'];
 			}
-			if (isset($data['rank'])) {
-				$this->rank = $data['rank'];
-			}
-			if (isset($data['problems_solved_count'])) {
-				$this->problems_solved_count = $data['problems_solved_count'];
-			}
-			if (isset($data['score'])) {
-				$this->score = $data['score'];
-			}
-			if (isset($data['username'])) {
-				$this->username = $data['username'];
+			if (isset($data['entity_type'])) {
+				$this->entity_type = $data['entity_type'];
 			}
 			if (isset($data['name'])) {
 				$this->name = $data['name'];
-			}
-			if (isset($data['country_id'])) {
-				$this->country_id = $data['country_id'];
 			}
 		}
 	}
@@ -59,20 +47,16 @@ class UserRank extends VO
 	/**
 	  * Obtener una representacion en String
 	  * 
-	  * Este metodo permite tratar a un objeto UserRank en forma de cadena.
+	  * Este metodo permite tratar a un objeto EntityFeedbackFeatures en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
 	public function __toString( )
 	{ 
 		$vec = array( 
-			"user_id" => $this->user_id,
-			"rank" => $this->rank,
-			"problems_solved_count" => $this->problems_solved_count,
-			"score" => $this->score,
-			"username" => $this->username,
-			"name" => $this->name,
-			"country_id" => $this->country_id
+			"feature_id" => $this->feature_id,
+			"entity_type" => $this->entity_type,
+			"name" => $this->name
 		); 
 	return json_encode($vec); 
 	}
@@ -90,50 +74,23 @@ class UserRank extends VO
 	/**
 	  *  [Campo no documentado]
 	  * Llave Primaria
+	  * Auto Incremento
 	  * @access public
 	  * @var int(11)
 	  */
-	public $user_id;
+	public $feature_id;
 
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var int(11)
+	  * @var ENUM
 	  */
-	public $rank;
+	public $entity_type;
 
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var int(11)
-	  */
-	public $problems_solved_count;
-
-	/**
-	  *  [Campo no documentado]
-	  * @access public
-	  * @var double
-	  */
-	public $score;
-
-	/**
-	  *  [Campo no documentado]
-	  * @access public
-	  * @var varchar(50)
-	  */
-	public $username;
-
-	/**
-	  *  [Campo no documentado]
-	  * @access public
-	  * @var varchar(256)
+	  * @var varchar(45)
 	  */
 	public $name;
-
-	/**
-	  *  [Campo no documentado]
-	  * @access public
-	  * @var char(3)
-	  */
-	public $country_id;
 }

@@ -8,59 +8,59 @@
   *                                                                                 *
   * ******************************************************************************* */
 
-/** UserFeedbackRating Data Access Object (DAO) Base.
+/** EntityFeedbackRating Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link UserFeedbackRating }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link EntityFeedbackRating }. 
   * @access public
   * @abstract
   * 
   */
-abstract class UserFeedbackRatingDAOBase extends DAO
+abstract class EntityFeedbackRatingDAOBase extends DAO
 {
 
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link UserFeedbackRating} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link EntityFeedbackRating} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( $UserFeedbackRating )
+	public static final function save( $Entity_Feedback_Rating )
 	{
-		if (!is_null(self::getByPK( $UserFeedbackRating->rating_id)))
+		if (!is_null(self::getByPK( $Entity_Feedback_Rating->feature_id)))
 		{
-			return UserFeedbackRatingDAOBase::update( $UserFeedbackRating);
+			return EntityFeedbackRatingDAOBase::update( $Entity_Feedback_Rating);
 		} else {
-			return UserFeedbackRatingDAOBase::create( $UserFeedbackRating);
+			return EntityFeedbackRatingDAOBase::create( $Entity_Feedback_Rating);
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link UserFeedbackRating} por llave primaria. 
+	  *	Obtener {@link EntityFeedbackRating} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link UserFeedbackRating} de la base de datos 
+	  * Este metodo cargara un objeto {@link EntityFeedbackRating} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link UserFeedbackRating Un objeto del tipo {@link UserFeedbackRating}. NULL si no hay tal registro.
+	  * @return @link EntityFeedbackRating Un objeto del tipo {@link EntityFeedbackRating}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $rating_id )
+	public static final function getByPK(  $feature_id )
 	{
-		if(  is_null( $rating_id )  ){ return NULL; }
-		$sql = "SELECT * FROM UserFeedbackRating WHERE (rating_id = ? ) LIMIT 1;";
-		$params = array(  $rating_id );
+		if(  is_null( $feature_id )  ){ return NULL; }
+		$sql = "SELECT * FROM Entity_Feedback_Rating WHERE (feature_id = ? ) LIMIT 1;";
+		$params = array(  $feature_id );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0) return NULL;
-		$foo = new UserFeedbackRating( $rs );
+		$foo = new EntityFeedbackRating( $rs );
 		return $foo;
 	}
 
@@ -68,7 +68,7 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link UserFeedbackRating}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link EntityFeedbackRating}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -77,11 +77,11 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link UserFeedbackRating}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link EntityFeedbackRating}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from UserFeedbackRating";
+		$sql = "SELECT * from Entity_Feedback_Rating";
 		if( ! is_null ( $orden ) )
 		{ $sql .= " ORDER BY `" . $orden . "` " . $tipo_de_orden;	}
 		if( ! is_null ( $pagina ) )
@@ -92,7 +92,7 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new UserFeedbackRating($foo);
+			$bar = new EntityFeedbackRating($foo);
     		array_push( $allData, $bar);
 		}
 		return $allData;
@@ -102,7 +102,7 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link UserFeedbackRating} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link EntityFeedbackRating} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -119,41 +119,29 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $UserFeedbackRating , $orderBy = null, $orden = 'ASC', $offset = 0, $rowcount = NULL, $likeColumns = NULL)
+	public static final function search( $Entity_Feedback_Rating , $orderBy = null, $orden = 'ASC', $offset = 0, $rowcount = NULL, $likeColumns = NULL)
 	{
-		if (!($UserFeedbackRating instanceof UserFeedbackRating)) {
-			return self::search(new UserFeedbackRating($UserFeedbackRating));
+		if (!($Entity_Feedback_Rating instanceof EntityFeedbackRating)) {
+			return self::search(new EntityFeedbackRating($Entity_Feedback_Rating));
 		}
 
-		$sql = "SELECT * from UserFeedbackRating WHERE ("; 
+		$sql = "SELECT * from Entity_Feedback_Rating WHERE ("; 
 		$val = array();
-		if (!is_null( $UserFeedbackRating->rating_id)) {
-			$sql .= " `rating_id` = ? AND";
-			array_push( $val, $UserFeedbackRating->rating_id );
+		if (!is_null( $Entity_Feedback_Rating->feature_id)) {
+			$sql .= " `feature_id` = ? AND";
+			array_push( $val, $Entity_Feedback_Rating->feature_id );
 		}
-		if (!is_null( $UserFeedbackRating->user_id)) {
-			$sql .= " `user_id` = ? AND";
-			array_push( $val, $UserFeedbackRating->user_id );
+		if (!is_null( $Entity_Feedback_Rating->entity_id)) {
+			$sql .= " `entity_id` = ? AND";
+			array_push( $val, $Entity_Feedback_Rating->entity_id );
 		}
-		if (!is_null( $UserFeedbackRating->problem_id)) {
-			$sql .= " `problem_id` = ? AND";
-			array_push( $val, $UserFeedbackRating->problem_id );
-		}
-		if (!is_null( $UserFeedbackRating->contest_id)) {
-			$sql .= " `contest_id` = ? AND";
-			array_push( $val, $UserFeedbackRating->contest_id );
-		}
-		if (!is_null( $UserFeedbackRating->create_date)) {
-			$sql .= " `create_date` = ? AND";
-			array_push( $val, $UserFeedbackRating->create_date );
-		}
-		if (!is_null( $UserFeedbackRating->rating)) {
+		if (!is_null( $Entity_Feedback_Rating->rating)) {
 			$sql .= " `rating` = ? AND";
-			array_push( $val, $UserFeedbackRating->rating );
+			array_push( $val, $Entity_Feedback_Rating->rating );
 		}
 		if (!is_null($likeColumns)) {
 			foreach ($likeColumns as $column => $value) {
@@ -176,7 +164,7 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new UserFeedbackRating($foo);
+			$bar =  new EntityFeedbackRating($foo);
 			array_push( $ar,$bar);
 		}
 		return $ar;
@@ -186,18 +174,15 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  *	Actualizar registros.
 	  *
 	  * @return Filas afectadas
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating a actualizar.
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating a actualizar.
 	  **/
-	private static final function update($UserFeedbackRating)
+	private static final function update($Entity_Feedback_Rating)
 	{
-		$sql = "UPDATE UserFeedbackRating SET  `user_id` = ?, `problem_id` = ?, `contest_id` = ?, `create_date` = ?, `rating` = ? WHERE  `rating_id` = ?;";
+		$sql = "UPDATE Entity_Feedback_Rating SET  `entity_id` = ?, `rating` = ? WHERE  `feature_id` = ?;";
 		$params = array( 
-			$UserFeedbackRating->user_id, 
-			$UserFeedbackRating->problem_id, 
-			$UserFeedbackRating->contest_id, 
-			$UserFeedbackRating->create_date, 
-			$UserFeedbackRating->rating, 
-			$UserFeedbackRating->rating_id, );
+			$Entity_Feedback_Rating->entity_id, 
+			$Entity_Feedback_Rating->rating, 
+			$Entity_Feedback_Rating->feature_id, );
 		global $conn;
 		$conn->Execute($sql, $params);
 		return $conn->Affected_Rows();
@@ -207,40 +192,35 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto UserFeedbackRating suministrado. Asegurese
+	  * contenidos del objeto EntityFeedbackRating suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto UserFeedbackRating dentro de la misma transaccion.
+	  * primaria generada en el objeto EntityFeedbackRating dentro de la misma transaccion.
 	  *	
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating a crear.
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating a crear.
 	  **/
-	private static final function create( $UserFeedbackRating )
+	private static final function create( $Entity_Feedback_Rating )
 	{
-		if (is_null($UserFeedbackRating->create_date)) $UserFeedbackRating->create_date = gmdate('Y-m-d H:i:s');
-		$sql = "INSERT INTO UserFeedbackRating ( `rating_id`, `user_id`, `problem_id`, `contest_id`, `create_date`, `rating` ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO Entity_Feedback_Rating ( `feature_id`, `entity_id`, `rating` ) VALUES ( ?, ?, ?);";
 		$params = array( 
-			$UserFeedbackRating->rating_id,
-			$UserFeedbackRating->user_id,
-			$UserFeedbackRating->problem_id,
-			$UserFeedbackRating->contest_id,
-			$UserFeedbackRating->create_date,
-			$UserFeedbackRating->rating,
+			$Entity_Feedback_Rating->feature_id,
+			$Entity_Feedback_Rating->entity_id,
+			$Entity_Feedback_Rating->rating,
 		 );
 		global $conn;
 		$conn->Execute($sql, $params);
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
- 		$UserFeedbackRating->rating_id = $conn->Insert_ID();
-
+ 
 		return $ar;
 	}
 
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link UserFeedbackRating} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link UserFeedbackRating}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link EntityFeedbackRating} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link EntityFeedbackRating}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -264,71 +244,38 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $UserFeedbackRatingA , $UserFeedbackRatingB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $Entity_Feedback_RatingA , $Entity_Feedback_RatingB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from UserFeedbackRating WHERE ("; 
+		$sql = "SELECT * from Entity_Feedback_Rating WHERE ("; 
 		$val = array();
-		if( ( !is_null (($a = $UserFeedbackRatingA->rating_id) ) ) & ( ! is_null ( ($b = $UserFeedbackRatingB->rating_id) ) ) ){
-				$sql .= " `rating_id` >= ? AND `rating_id` <= ? AND";
+		if( ( !is_null (($a = $Entity_Feedback_RatingA->feature_id) ) ) & ( ! is_null ( ($b = $Entity_Feedback_RatingB->feature_id) ) ) ){
+				$sql .= " `feature_id` >= ? AND `feature_id` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `rating_id` = ? AND"; 
+			$sql .= " `feature_id` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $UserFeedbackRatingA->user_id) ) ) & ( ! is_null ( ($b = $UserFeedbackRatingB->user_id) ) ) ){
-				$sql .= " `user_id` >= ? AND `user_id` <= ? AND";
+		if( ( !is_null (($a = $Entity_Feedback_RatingA->entity_id) ) ) & ( ! is_null ( ($b = $Entity_Feedback_RatingB->entity_id) ) ) ){
+				$sql .= " `entity_id` >= ? AND `entity_id` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `user_id` = ? AND"; 
+			$sql .= " `entity_id` = ? AND"; 
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( ( !is_null (($a = $UserFeedbackRatingA->problem_id) ) ) & ( ! is_null ( ($b = $UserFeedbackRatingB->problem_id) ) ) ){
-				$sql .= " `problem_id` >= ? AND `problem_id` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `problem_id` = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $UserFeedbackRatingA->contest_id) ) ) & ( ! is_null ( ($b = $UserFeedbackRatingB->contest_id) ) ) ){
-				$sql .= " `contest_id` >= ? AND `contest_id` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `contest_id` = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $UserFeedbackRatingA->create_date) ) ) & ( ! is_null ( ($b = $UserFeedbackRatingB->create_date) ) ) ){
-				$sql .= " `create_date` >= ? AND `create_date` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `create_date` = ? AND"; 
-			$a = is_null ( $a ) ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( ( !is_null (($a = $UserFeedbackRatingA->rating) ) ) & ( ! is_null ( ($b = $UserFeedbackRatingB->rating) ) ) ){
+		if( ( !is_null (($a = $Entity_Feedback_RatingA->rating) ) ) & ( ! is_null ( ($b = $Entity_Feedback_RatingB->rating) ) ) ){
 				$sql .= " `rating` >= ? AND `rating` <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
@@ -348,7 +295,7 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $row) {
-			array_push( $ar, $bar = new UserFeedbackRating($row));
+			array_push( $ar, $bar = new EntityFeedbackRating($row));
 		}
 		return $ar;
 	}
@@ -357,20 +304,20 @@ abstract class UserFeedbackRatingDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto UserFeedbackRating suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto EntityFeedbackRating suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param UserFeedbackRating [$UserFeedbackRating] El objeto de tipo UserFeedbackRating a eliminar
+	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating a eliminar
 	  **/
-	public static final function delete( $UserFeedbackRating )
+	public static final function delete( $Entity_Feedback_Rating )
 	{
-		if( is_null( self::getByPK($UserFeedbackRating->rating_id) ) ) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM UserFeedbackRating WHERE  rating_id = ?;";
-		$params = array( $UserFeedbackRating->rating_id );
+		if( is_null( self::getByPK($Entity_Feedback_Rating->feature_id) ) ) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM Entity_Feedback_Rating WHERE  feature_id = ?;";
+		$params = array( $Entity_Feedback_Rating->feature_id );
 		global $conn;
 
 		$conn->Execute($sql, $params);

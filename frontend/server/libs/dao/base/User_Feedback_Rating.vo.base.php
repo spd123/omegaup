@@ -8,19 +8,19 @@
   *                                                                                 *
   * ******************************************************************************* */
 
-/** Value Object file for table User_Rank.
+/** Value Object file for table User_Feedback_Rating.
   * 
   * VO does not have any behaviour.
   * @access public
   * 
   */
 
-class UserRank extends VO
+class UserFeedbackRating extends VO
 {
 	/**
-	  * Constructor de UserRank
+	  * Constructor de UserFeedbackRating
 	  * 
-	  * Para construir un objeto de tipo UserRank debera llamarse a el constructor 
+	  * Para construir un objeto de tipo UserFeedbackRating debera llamarse a el constructor 
 	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
 	  */
@@ -35,23 +35,20 @@ class UserRank extends VO
 			if (isset($data['user_id'])) {
 				$this->user_id = $data['user_id'];
 			}
-			if (isset($data['rank'])) {
-				$this->rank = $data['rank'];
+			if (isset($data['entity_id'])) {
+				$this->entity_id = $data['entity_id'];
 			}
-			if (isset($data['problems_solved_count'])) {
-				$this->problems_solved_count = $data['problems_solved_count'];
+			if (isset($data['feature_id'])) {
+				$this->feature_id = $data['feature_id'];
 			}
-			if (isset($data['score'])) {
-				$this->score = $data['score'];
+			if (isset($data['create_date'])) {
+				$this->create_date = $data['create_date'];
 			}
-			if (isset($data['username'])) {
-				$this->username = $data['username'];
+			if (isset($data['rating'])) {
+				$this->rating = $data['rating'];
 			}
-			if (isset($data['name'])) {
-				$this->name = $data['name'];
-			}
-			if (isset($data['country_id'])) {
-				$this->country_id = $data['country_id'];
+			if (isset($data['comments'])) {
+				$this->comments = $data['comments'];
 			}
 		}
 	}
@@ -59,7 +56,7 @@ class UserRank extends VO
 	/**
 	  * Obtener una representacion en String
 	  * 
-	  * Este metodo permite tratar a un objeto UserRank en forma de cadena.
+	  * Este metodo permite tratar a un objeto UserFeedbackRating en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
@@ -67,12 +64,11 @@ class UserRank extends VO
 	{ 
 		$vec = array( 
 			"user_id" => $this->user_id,
-			"rank" => $this->rank,
-			"problems_solved_count" => $this->problems_solved_count,
-			"score" => $this->score,
-			"username" => $this->username,
-			"name" => $this->name,
-			"country_id" => $this->country_id
+			"entity_id" => $this->entity_id,
+			"feature_id" => $this->feature_id,
+			"create_date" => $this->create_date,
+			"rating" => $this->rating,
+			"comments" => $this->comments
 		); 
 	return json_encode($vec); 
 	}
@@ -84,7 +80,7 @@ class UserRank extends VO
 		if (count($fields) > 0)
 			parent::toUnixTime($fields);
 		else
-			parent::toUnixTime(array());
+			parent::toUnixTime(array("create_date"));
 	}
 
 	/**
@@ -100,40 +96,33 @@ class UserRank extends VO
 	  * @access public
 	  * @var int(11)
 	  */
-	public $rank;
+	public $entity_id;
 
 	/**
 	  *  [Campo no documentado]
 	  * @access public
 	  * @var int(11)
 	  */
-	public $problems_solved_count;
+	public $feature_id;
 
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var double
+	  * @var timestamp
 	  */
-	public $score;
+	public $create_date;
 
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var varchar(50)
+	  * @var float(2,2)
 	  */
-	public $username;
+	public $rating;
 
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var varchar(256)
+	  * @var text,
 	  */
-	public $name;
-
-	/**
-	  *  [Campo no documentado]
-	  * @access public
-	  * @var char(3)
-	  */
-	public $country_id;
+	public $comments;
 }
