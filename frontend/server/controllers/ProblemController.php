@@ -826,7 +826,7 @@ class ProblemController extends Controller {
      * @throws ForbiddenAccessException
      */
     private static function validateDetails(Request $r) {
-        Validators::isStringNonEmpty($r['contest_alias'], 'contest_alias', false);
+        Validators::isStringNonEmpty($r['contest_alias'], 'contest_alias', false /*required*/);
         Validators::isStringNonEmpty($r['problem_alias'], 'problem_alias');
 
         // Lang is optional. Default is user's preferred.
@@ -1644,5 +1644,50 @@ class ProblemController extends Controller {
         }
 
         return $score;
+    }
+
+    /**
+     * Sets a user's rating for a problem
+     *
+     * @param Request $r
+     * @throws InvalidDatabaseOperationException
+     */
+    public static function apiSetRating(Request $r) {
+        self::authenticateRequest($r);
+
+        self::validateDetails($r);
+        Validators::isNumberInRange($r['rating'], 'rating', 0, 6);
+        Validators::isStringOfMaxLength($r['feature'], 'feature', 100);
+        Validators::isStringOfMaxLength($r['comments'], 'feature', 500, false /*required*/);
+
+        try {
+            // Find feature
+            $featureResults = EntityFeedbackFeaturesDAO::search(array(
+                'name' => $r['feature'],
+                'entity_type' => 'Problem'
+            ));
+
+            if (count($featureResults) === 0) {
+                throw new NotFoundException('featureNotFound');
+            }
+
+            $feature = $featureResults[0];
+
+            $userRating = new UserFeedbackRating(array(
+                'user_id' => $r['current_user_id'],
+                'entity_id' => $r['problem']->problem_id,
+                'feature_id' => $feature->feature_id,
+                'rating' => $r['rating'],
+                'comments' => $r['comments'] // @todo test optional
+            ));
+
+            UserFeedbackRatingDAO::save($userRating);
+        } catch (NotFoundException $ne) {
+            throw $ne;
+        } catch (Exception $e) {
+            throw new InvalidDatabaseOperationException($e);
+        }
+
+        return array('status' => 'ok');
     }
 }
