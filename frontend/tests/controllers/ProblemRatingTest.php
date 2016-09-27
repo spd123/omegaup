@@ -8,37 +8,69 @@
 require_once 'libs/FileHandler.php';
 
 class ProblemRatingTest extends OmegaupTestCase {
+
     /**
-     * Basic test for creating a problem
+     * AddRating API caller helper. If a problem or user is not passed a new one is created.
      */
-    public function testAddValidRating() {
+    private function addRating($rating = 5, $feature = 'Overall', $comment = 'some comment', $problem = null, $user = null) {
         // Get a problem
-        $problem = ProblemsFactory::createProblem();
-        $user = UserFactory::createUser();
+        $problem = is_null($problem) ? ProblemsFactory::createProblem() : $problem;
+        $user = is_null($user) ? UserFactory::createUser() : $user;
 
         // Call API
-        $rating = 5;
-        $comment = 'omg osom';
-        $response = ProblemController::apiSetRating(new Request(array(
-            'auth_token' => self::login($user),
-            'problem_alias' => $problem['problem']->alias,
-            'feature' => 'Overall',
-            'comments' => $comment,
-            'rating' => $rating
-        )));
+        $requestArray = array();
+        if ($rating != null) {
+            $requestArray['rating'] = $rating;
+        }
 
-        $this->assertEquals('ok', $response['status']);
+        if ($feature != null) {
+            $requestArray['feature'] = $feature;
+        }
 
-        $featureRecord = UserFeedbackRatingDAO::search(array(
-            'user_id' => $user->user_id,
-            'entity_id' => $problem['problem']->problem_id,
-            'entity_type' => 'Problem',
+        if ($comment != null) {
+            $requestArray['comments'] = $comment;
+        }
+
+        $requestArray['auth_token'] = self::login($user);
+        $requestArray['problem_alias'] = $problem['problem']->alias;
+
+        $response = ProblemController::apiSetRating(new Request($requestArray));
+
+        return array(
+            'response' => $response,
+            'user' => $user,
+            'problem' => $problem,
             'rating' => $rating,
+            'feature' => $feature,
             'comments' => $comment
+        );
+    }
+
+    /**
+     * Asserts the $result array returned from the addRating helper was created on the DB.
+     */
+    private function assertRatingCreated($result) {
+        $featureRecord = UserFeedbackRatingDAO::search(array(
+            'user_id' => $result['user']->user_id,
+            'entity_id' => $result['problem']['problem']->problem_id,
+            'entity_type' => 'Problem',
+            'rating' => $result['rating'],
+            'comments' => $result['comments']
         ));
 
         $this->assertEquals(1, count($featureRecord));
     }
+
+    /**
+     * Basic test for creating a problem
+     */
+    public function testAddValidRating() {
+        $result = $this->addRating();
+        $response = $result['response'];
+
+        $this->assertEquals('ok', $response['status']);
+        $this->assertRatingCreated($result);
+   }
 
     /**
      * Test feature not existing
@@ -46,19 +78,32 @@ class ProblemRatingTest extends OmegaupTestCase {
      * @expectedException NotFoundException
      */
     public function testFeatureDoesNotExists() {
-         // Get a problem
-        $problem = ProblemsFactory::createProblem();
-        $user = UserFactory::createUser();
+        $this->addRating(5 /*rating*/, 'NonExistentFeature' /*feature*/);
+    }
 
-        // Call API
-        $rating = 5;
-        $comment = 'omg osom';
-        $response = ProblemController::apiSetRating(new Request(array(
-            'auth_token' => self::login($user),
-            'problem_alias' => $problem['problem']->alias,
-            'feature' => 'DoesNotExists',
-            'comments' => $comment,
-            'rating' => $rating
-        )));
+    /**
+     * Rating was created with optional comment
+     */
+    public function testCommentIsOptional() {
+        $result = $this->addRating(5 /*rating*/, 'Overall' /*feature*/, null /*Comments*/);
+        $this->assertRatingCreated($result);
+    }
+
+    /**
+     * Rating > 5
+     *
+     * @expectedException InvalidParameterException
+     */
+    public function testRatingHigherThan5() {
+        $this->addRating(6 /*rating*/);
+    }
+
+    /**
+     * Rating < 1
+     *
+     * @expectedException InvalidParameterException
+     */
+    public function testRatingLessThan1() {
+        $this->addRating(0 /*rating*/);
     }
 }

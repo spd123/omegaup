@@ -1656,7 +1656,7 @@ class ProblemController extends Controller {
         self::authenticateRequest($r);
 
         self::validateDetails($r);
-        Validators::isNumberInRange($r['rating'], 'rating', 0, 6);
+        Validators::isNumberInRange($r['rating'], 'rating', 1, 5);
         Validators::isStringOfMaxLength($r['feature'], 'feature', 100);
         Validators::isStringOfMaxLength($r['comments'], 'feature', 500, false /*required*/);
 
@@ -1678,7 +1678,7 @@ class ProblemController extends Controller {
                 'entity_id' => $r['problem']->problem_id,
                 'feature_id' => $feature->feature_id,
                 'rating' => $r['rating'],
-                'comments' => $r['comments'] // @todo test optional
+                'comments' => $r['comments']
             ));
 
             UserFeedbackRatingDAO::save($userRating);
