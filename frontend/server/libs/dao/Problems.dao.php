@@ -187,7 +187,7 @@ class ProblemsDAO extends ProblemsDAOBase
         $result = $conn->Execute("$select $sql", $args);
 
         // Only these fields (plus score, points and ratio) will be returned.
-        $filters = array('title', 'submissions', 'accepted', 'alias', 'public');
+        $filters = array('title', 'submissions', 'accepted', 'alias', 'public', 'rating');
         $problems = array();
         if (!is_null($result)) {
             foreach ($result as $row) {
