@@ -430,7 +430,7 @@ class ProblemList extends OmegaupTestCase {
         $response = ProblemController::apiList(new Request());
 
         var_dump($response);
-        foreach($response['results'] as $responseProblem) {
+        foreach ($response['results'] as $responseProblem) {
             if (!isset($responseProblem['rating']) || $responseProblem['rating'] < 1 || $response['rating'] > 5) {
                 $this->fail('Rating was not properly set');
             }

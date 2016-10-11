@@ -70,7 +70,7 @@ class ProblemRatingTest extends OmegaupTestCase {
 
         $this->assertEquals('ok', $response['status']);
         $this->assertRatingCreated($result);
-   }
+    }
 
     /**
      * Test feature not existing
