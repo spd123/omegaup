@@ -428,7 +428,7 @@ class ProblemList extends OmegaupTestCase {
     public function testRatingInList() {
         $problemData = ProblemsFactory::createProblem();
         $response = ProblemController::apiList(new Request());
-        
+
         foreach ($response['results'] as $responseProblem) {
             if (!isset($responseProblem['rating']) || $responseProblem['rating'] < 1 || $responseProblem['rating'] > 5) {
                 $this->fail('Rating was not properly set');
