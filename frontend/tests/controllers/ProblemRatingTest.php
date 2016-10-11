@@ -8,7 +8,6 @@
 require_once 'libs/FileHandler.php';
 
 class ProblemRatingTest extends OmegaupTestCase {
-
     /**
      * AddRating API caller helper. If a problem or user is not passed a new one is created.
      */
