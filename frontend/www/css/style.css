@@ -518,6 +518,8 @@ padding-right: 5px;
 
 th.contains-long-desc{ min-width:369px; }
 
+th.rating{ min-width:90px; }
+
 .search-bar {
 	margin-bottom: 10px;
 }

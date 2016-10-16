@@ -1,9 +1,12 @@
 {include file='problem_search_bar.tpl'}
+<link rel="stylesheet" href="/third_party/css/font-awesome.min.css">
+<link rel="stylesheet" href="/third_party/css/starrr.css">
+
 <div class="wait_for_ajax panel panel-default" id="problems_list" >
 	<div class="panel-heading">
 		<h3 class="panel-title">{#wordsProblems#}</h3>
 	</div>
-	<table class="table problem-list">
+	<table class="table problem-list" id="problem-list-table">
 		<thead>
 			<tr>
 				<th class="contains-long-desc">{#wordsTitle#}</th>
@@ -15,6 +18,7 @@
 					<a rel="tooltip" href="http://blog.omegaup.com/2014/06/el-nuevo-ranking-de-omegaup/" data-toggle="tooltip" title data-original-title="{#wordsPointsForRankTooltip#}"><img src="/media/question.png"></a>
 				</th>
 				<th class="numericColumn">{#wordsMyScore#}</th>
+				<th class="rating">{#wordsRating#}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,10 +38,14 @@
 				<td class="numericColumn">{100 * $problem.ratio}%</td>
 				<td class="numericColumn">{$problem.points}</td>
 				<td class="numericColumn">{$problem.score}</td>
+				<td class="rating" id="rating">{$problem.rating}</td>
 				</tr>
 			{/foreach}
 		</tbody>
 	</table>
+
+	<script src="/third_party/js/starrr.js"></script>
+	<script src="/js/problem.list.js?ver=aa36a5"></script>
 
 	{include file='pager_bar.tpl'}
 </div>
