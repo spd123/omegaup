@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/third_party/js/sugar.js?ver=171bac"></script>
 		<script type="text/javascript" src="/third_party/js/knockout-4.3.0.js?ver=059d58"></script>
 		<script type="text/javascript" src="/third_party/js/knockout-secure-binding.min.js?ver=81a2a3"></script>
+		<script type="text/javascript" src="/third_party/js/starrr.js?ver=81a2a3"></script>
 
 		<script type="text/javascript" src="/js/omegaup/omegaup.js?ver=5c773b"></script>
 		<script type="text/javascript" src="/js/omegaup/api.js?ver=9101ec"></script>
@@ -43,6 +44,8 @@
 		<script type="text/javascript" src="/third_party/js/bootstrap-datetimepicker.min.js?ver=a0cafb"></script>
 
 		<link rel="stylesheet" href="/third_party/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="/third_party/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/third_party/css/starrr.css">
 		<link rel="stylesheet" href="/css/common.css" />
 		<link rel="stylesheet" href="/ux/arena.css?t=5" />
 		<link rel="shortcut icon" href="/favicon.ico" />

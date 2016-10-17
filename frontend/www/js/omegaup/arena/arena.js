@@ -855,6 +855,29 @@ omegaup.arena.Arena.prototype.onHashChanged = function() {
 				}
 			});
 
+			// add ratings			
+			function updateProblemRating(problemAlias, type, value) {
+				omegaup.API.setProblemRating(problemAlias, type, value, function(data){
+					if (data.status != 'ok') {
+						omegaup.UI.error(data.error);
+					}					
+				});
+			}
+
+			$('#ratings .rating-overall').starrr({
+				rating: problem.rating,
+				change: function(e, value) {
+					updateProblemRating(problem.alias, 'Overall', value);
+				}			
+			});
+
+			$('#ratings .rating-statement-clarity').starrr({
+				rating: problem.rating,
+				change: function(e, value) {
+					updateProblemRating(problem.alias, 'StatementClarity', value);
+				}			
+			});
+
 			function updateRuns(runs) {
 				if (runs) {
 					for (var i = 0; i < runs.length; i++) {
@@ -884,6 +907,7 @@ omegaup.arena.Arena.prototype.onHashChanged = function() {
 				problem.problem_statement = problem_ext.problem_statement;
 				problem.sample_input = problem_ext.sample_input;
 				problem.runs = problem_ext.runs;
+				problem.rating = problem_ext.rating;
 				update(problem);
 			});
 		}

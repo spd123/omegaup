@@ -1041,7 +1041,7 @@ class ProblemController extends Controller {
             'validator_time_limit', 'overall_wall_time_limit', 'extra_wall_time',
             'memory_limit', 'output_limit', 'visits', 'submissions', 'accepted',
             'difficulty', 'creation_date', 'source', 'order', 'points', 'public',
-            'languages', 'slow', 'stack_limit', 'email_clarifications');
+            'languages', 'slow', 'stack_limit', 'email_clarifications', 'rating');
 
         // Read the file that contains the source
         if (!ProblemController::isLanguageSupportedForProblem($r)) {

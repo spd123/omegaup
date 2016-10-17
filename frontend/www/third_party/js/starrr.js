@@ -40,14 +40,14 @@ var slice = [].slice;
     }
 
     Starrr.prototype.getStars = function() {
-      return this.$el.find('a');
+      return this.$el.find((!this.options.readOnly) ? 'a' : 'p');
     };
 
     Starrr.prototype.createStars = function() {
       var j, ref, results;
       results = [];
       for (j = 1, ref = this.options.max; 1 <= ref ? j <= ref : j >= ref; 1 <= ref ? j++ : j--) {
-        results.push(this.$el.append("<a href='#' />"));
+        results.push(this.$el.append((!this.options.readOnly) ? "<a href='#' />" : "<p />"));
       }
       return results;
     };

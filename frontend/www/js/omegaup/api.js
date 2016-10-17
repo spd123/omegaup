@@ -1113,6 +1113,26 @@ omegaup.API = {
 		});
 	},
 
+	setProblemRating: function(problemAlias, feature, rating, callback) {
+		$.post(
+			'/api/problem/setRating/problem_alias/' + encodeURIComponent(problemAlias) + '/',
+			{
+				feature: feature,
+				rating: rating
+			},
+			function (data) {
+				callback(data);
+			},
+			'json'			
+		).fail(function(j, status, errorThrown) {
+			try {
+				callback(JSON.parse(j.responseText));
+			} catch (err) {
+				callback({status:'error', 'error':undefined});
+			}
+		});
+	},
+
 	getGroupMembers: function(groupAlias, callback) {
 		$.post(
 			'/api/group/members/group_alias/' + encodeURIComponent(groupAlias) + '/',
