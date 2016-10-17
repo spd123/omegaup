@@ -1123,7 +1123,7 @@ omegaup.API = {
 			function (data) {
 				callback(data);
 			},
-			'json'			
+			'json'
 		).fail(function(j, status, errorThrown) {
 			try {
 				callback(JSON.parse(j.responseText));

@@ -64,7 +64,7 @@
 					</table>
 				</div>
 				<div id="problem" class="main">
-					<h1 class="title"></h1>					
+					<h1 class="title"></h1>
 					<table class="data">
 						<tr>
 							<td>{#wordsPoints#}</td>
@@ -99,12 +99,12 @@
 					<div class="problemsetter">{#wordsProblemsetter#}: <a></a></div>
 					<hr />
 					<div id="ratings">
-						{#ratingsRateThisProblem#}: 
+						{#ratingsRateThisProblem#}:
 						<div id ="overall">
 							{#ratingsStatementClarity#}: <span class="rating-statement-clarity"></span> |
 							{#ratingsOverall#}: <span class="rating-overall"></span>
 						</div>
-					</div> 
+					</div>
 
 {if $practice}
 {include file='arena.runs.tpl' show_submit=true show_details=true}
