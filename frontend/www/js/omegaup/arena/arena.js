@@ -855,12 +855,12 @@ omegaup.arena.Arena.prototype.onHashChanged = function() {
 				}
 			});
 
-			// add ratings
+			// add ratings			
 			function updateProblemRating(problemAlias, type, value) {
 				omegaup.API.setProblemRating(problemAlias, type, value, function(data){
 					if (data.status != 'ok') {
 						omegaup.UI.error(data.error);
-					}
+					}					
 				});
 			}
 
@@ -868,14 +868,7 @@ omegaup.arena.Arena.prototype.onHashChanged = function() {
 				rating: problem.rating,
 				change: function(e, value) {
 					updateProblemRating(problem.alias, 'Overall', value);
-				}
-			});
-
-			$('#ratings .rating-statement-clarity').starrr({
-				rating: problem.rating,
-				change: function(e, value) {
-					updateProblemRating(problem.alias, 'StatementClarity', value);
-				}
+				}			
 			});
 
 			function updateRuns(runs) {

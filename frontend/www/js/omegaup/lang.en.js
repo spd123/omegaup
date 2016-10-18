@@ -387,7 +387,7 @@ omegaup.T = {
 	rankSolved: "Solved problems",
 	rankViewFull: "View full rank",
 	ratingsOverall: "Overall",
-	ratingsRateThisProblem: "Evaluate this problem",
+	ratingsRateThisProblem: "Rate this problem",
 	ratingsStatementClarity: "Statement clarity",
 	registerForContest: "Register for contest",
 	registrationPending: "Your request to join this contest is pending approval from the contest admin.",

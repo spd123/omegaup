@@ -30,5 +30,4 @@ INSERT INTO
 VALUES
 	(1, 'Problem', 'Overall'),
 	(2, 'Contest', 'Overall'),
-	(3, 'Problem', 'StatementClarity'),
-	(4, 'Contest', 'ProblemSelection');
+	(3, 'Contest', 'ProblemSelection');
