@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="/js/omegaup/api.js?ver=68f487"></script>
 		<script type="text/javascript" src="/js/omegaup/ui.js?ver=c1c5ba"></script>
 		<script type="text/javascript" src="/js/omegaup/lang.{#locale#}.js?ver=f0fb05,396746,75317a,a6cdb8"></script>
-		<script type="text/javascript" src="/js/omegaup/arena/arena.js?ver=33bc75"></script>
+		<script type="text/javascript" src="/js/omegaup/arena/arena.js?ver=293d30"></script>
 
 		{if isset($jsfile)}
 		<script type="text/javascript" src="{$jsfile}"></script>
