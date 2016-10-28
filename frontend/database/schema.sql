@@ -167,7 +167,6 @@ CREATE TABLE IF NOT EXISTS `Contests` (
   `contestant_must_register`   tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indica que los participantes deben pre-registrarse antes de poder paticipar',
   `languages` set('c','cpp','java','py','rb','pl','cs','pas','kp','kj','cat','hs','cpp11') DEFAULT NULL COMMENT 'Un filtro (opcional) de qué lenguajes se pueden usar en un concurso',
   `recommended` BOOL NOT NULL DEFAULT  '0' COMMENT  'Mostrar el concurso en la lista de recomendados.',
-	`rating` float NOT NULL DEFAULT '3.0' COMMENT 'Rating calulado para el concurso',
   PRIMARY KEY (`contest_id`),
   KEY `director_id` (`director_id`),
   KEY `rerun_id` (`contest_id`),
@@ -435,7 +434,6 @@ CREATE TABLE IF NOT EXISTS `Problems` (
   `slow` tinyint(1) NOT NULL DEFAULT 0,
   `deprecated` tinyint(1) NOT NULL DEFAULT 0,
   `email_clarifications` tinyint(1) NOT NULL DEFAULT 0,
-	`rating` float NOT NULL DEFAULT '3.0',
   PRIMARY KEY (`problem_id`),
   KEY `author_id` (`author_id`),
   UNIQUE KEY `problems_alias` (`alias`)

@@ -9,19 +9,19 @@
   * ******************************************************************************* */
 
 /** Value Object file for table User_Feedback_Rating.
-  * 
+  *
   * VO does not have any behaviour.
   * @access public
-  * 
+  *
   */
 
 class UserFeedbackRating extends VO
 {
 	/**
 	  * Constructor de UserFeedbackRating
-	  * 
-	  * Para construir un objeto de tipo UserFeedbackRating debera llamarse a el constructor 
-	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  *
+	  * Para construir un objeto de tipo UserFeedbackRating debera llamarse a el constructor
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
 	  */
 	function __construct($data = NULL)
@@ -30,7 +30,6 @@ class UserFeedbackRating extends VO
 		{
 			if (is_string($data))
 				$data = self::object_to_array(json_decode($data));
-
 
 			if (isset($data['user_id'])) {
 				$this->user_id = $data['user_id'];
@@ -55,22 +54,22 @@ class UserFeedbackRating extends VO
 
 	/**
 	  * Obtener una representacion en String
-	  * 
+	  *
 	  * Este metodo permite tratar a un objeto UserFeedbackRating en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
-	  * @return String 
+	  * @return String
 	  */
 	public function __toString( )
-	{ 
-		$vec = array( 
+	{
+		$vec = array(
 			"user_id" => $this->user_id,
 			"entity_id" => $this->entity_id,
 			"feature_id" => $this->feature_id,
 			"create_date" => $this->create_date,
 			"rating" => $this->rating,
 			"comments" => $this->comments
-		); 
-	return json_encode($vec); 
+		);
+	return json_encode($vec);
 	}
 
 	/**
@@ -115,7 +114,7 @@ class UserFeedbackRating extends VO
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var float(2,2)
+	  * @var float
 	  */
 	public $rating;
 

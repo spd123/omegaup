@@ -9,19 +9,19 @@
   * ******************************************************************************* */
 
 /** Value Object file for table Entity_Feedback_Rating.
-  * 
+  *
   * VO does not have any behaviour.
   * @access public
-  * 
+  *
   */
 
 class EntityFeedbackRating extends VO
 {
 	/**
 	  * Constructor de EntityFeedbackRating
-	  * 
-	  * Para construir un objeto de tipo EntityFeedbackRating debera llamarse a el constructor 
-	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  *
+	  * Para construir un objeto de tipo EntityFeedbackRating debera llamarse a el constructor
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
 	  */
 	function __construct($data = NULL)
@@ -30,7 +30,6 @@ class EntityFeedbackRating extends VO
 		{
 			if (is_string($data))
 				$data = self::object_to_array(json_decode($data));
-
 
 			if (isset($data['feature_id'])) {
 				$this->feature_id = $data['feature_id'];
@@ -46,19 +45,19 @@ class EntityFeedbackRating extends VO
 
 	/**
 	  * Obtener una representacion en String
-	  * 
+	  *
 	  * Este metodo permite tratar a un objeto EntityFeedbackRating en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
-	  * @return String 
+	  * @return String
 	  */
 	public function __toString( )
-	{ 
-		$vec = array( 
+	{
+		$vec = array(
 			"feature_id" => $this->feature_id,
 			"entity_id" => $this->entity_id,
 			"rating" => $this->rating
-		); 
-	return json_encode($vec); 
+		);
+	return json_encode($vec);
 	}
 
 	/**
@@ -89,7 +88,7 @@ class EntityFeedbackRating extends VO
 	/**
 	  *  [Campo no documentado]
 	  * @access public
-	  * @var float(2,2)
+	  * @var float
 	  */
 	public $rating;
 }

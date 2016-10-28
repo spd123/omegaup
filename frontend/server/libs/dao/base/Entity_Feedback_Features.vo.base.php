@@ -9,19 +9,19 @@
   * ******************************************************************************* */
 
 /** Value Object file for table Entity_Feedback_Features.
-  * 
+  *
   * VO does not have any behaviour.
   * @access public
-  * 
+  *
   */
 
 class EntityFeedbackFeatures extends VO
 {
 	/**
 	  * Constructor de EntityFeedbackFeatures
-	  * 
-	  * Para construir un objeto de tipo EntityFeedbackFeatures debera llamarse a el constructor 
-	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  *
+	  * Para construir un objeto de tipo EntityFeedbackFeatures debera llamarse a el constructor
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
 	  */
 	function __construct($data = NULL)
@@ -30,7 +30,6 @@ class EntityFeedbackFeatures extends VO
 		{
 			if (is_string($data))
 				$data = self::object_to_array(json_decode($data));
-
 
 			if (isset($data['feature_id'])) {
 				$this->feature_id = $data['feature_id'];
@@ -46,19 +45,19 @@ class EntityFeedbackFeatures extends VO
 
 	/**
 	  * Obtener una representacion en String
-	  * 
+	  *
 	  * Este metodo permite tratar a un objeto EntityFeedbackFeatures en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
-	  * @return String 
+	  * @return String
 	  */
 	public function __toString( )
-	{ 
-		$vec = array( 
+	{
+		$vec = array(
 			"feature_id" => $this->feature_id,
 			"entity_type" => $this->entity_type,
 			"name" => $this->name
-		); 
-	return json_encode($vec); 
+		);
+	return json_encode($vec);
 	}
 
 	/**

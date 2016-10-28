@@ -112,9 +112,6 @@ class Problems extends VO
 			if (isset($data['email_clarifications'])) {
 				$this->email_clarifications = $data['email_clarifications'];
 			}
-			if (isset($data['rating'])) {
-				$this->rating = $data['rating'];
-			}
 		}
 	}
 
@@ -154,8 +151,7 @@ class Problems extends VO
 			"tolerance" => $this->tolerance,
 			"slow" => $this->slow,
 			"deprecated" => $this->deprecated,
-			"email_clarifications" => $this->email_clarifications,
-			"rating" => $this->rating
+			"email_clarifications" => $this->email_clarifications
 		);
 	return json_encode($vec);
 	}
@@ -360,11 +356,4 @@ class Problems extends VO
 	  * @var tinyint(1)
 	  */
 	public $email_clarifications;
-
-	/**
-	  *  [Campo no documentado]
-	  * @access public
-	  * @var tinyint
-	  */
-	public $rating;
 }

@@ -51,6 +51,7 @@ class ProblemsDAO extends ProblemsDAOBase
                     ROUND(100 / LOG2(GREATEST(accepted, 1) + 1), 2)   AS points,
                     accepted / GREATEST(1, submissions)     AS ratio,
                     ROUND(100 * COALESCE(ps.score, 0))      AS score,
+                    efr.rating,
                     p.*';
             $sql = '
                 FROM
@@ -65,7 +66,9 @@ class ProblemsDAO extends ProblemsDAOBase
                         Runs ON Runs.user_id = ? AND Runs.problem_id = Problems.problem_id
                     GROUP BY
                         Problems.problem_id
-                    ) ps ON ps.problem_id = p.problem_id';
+                    ) ps ON ps.problem_id = p.problem_id
+                LEFT JOIN 
+                    Entity_Feedback_Rating efr ON efr.entity_id = p.problem_id AND efr.entity_id = 2';
 
             $added_where = false;
             if (!is_null($tag)) {
@@ -91,6 +94,7 @@ class ProblemsDAO extends ProblemsDAOBase
                     ROUND(100 / LOG2(GREATEST(p.accepted, 1) + 1), 2) AS points,
                     p.accepted / GREATEST(1, p.submissions)     AS ratio,
                     ROUND(100 * COALESCE(ps.score, 0), 2)   AS score,
+                    efr.rating,
                     p.*';
             $sql = '
                 FROM
@@ -116,7 +120,9 @@ class ProblemsDAO extends ProblemsDAOBase
                     INNER JOIN
                         Group_Roles gr ON gr.group_id = gu.group_id
                     WHERE gu.user_id = ? AND gr.role_id = 3
-                ) gr ON p.problem_id = gr.contest_id';
+                ) gr ON p.problem_id = gr.contest_id
+                LEFT JOIN 
+                    Entity_Feedback_Rating efr ON efr.entity_id = p.problem_id AND efr.entity_id = 2';
             $args[] = $user_id;
             $args[] = $user_id;
             $args[] = $user_id;
@@ -144,10 +150,13 @@ class ProblemsDAO extends ProblemsDAOBase
                         0 AS score,
                         ROUND(100 / LOG2(GREATEST(p.accepted, 1) + 1), 2) AS points,
                         accepted / GREATEST(1, p.submissions)   AS ratio,
+                        efr.rating,
                         p.*';
             $sql = '
                     FROM
-                        Problems p';
+                        Problems p
+                    LEFT JOIN 
+                        Entity_Feedback_Rating efr ON efr.entity_id = p.problem_id AND efr.entity_id = 2';
 
             if (!is_null($tag)) {
                 $sql .= ' INNER JOIN Problems_Tags pt ON pt.problem_id = p.problem_id';
@@ -187,7 +196,7 @@ class ProblemsDAO extends ProblemsDAOBase
         $result = $conn->Execute("$select $sql", $args);
 
         // Only these fields (plus score, points and ratio) will be returned.
-        $filters = array('title', 'submissions', 'accepted', 'alias', 'public', 'rating');
+        $filters = array('title', 'submissions', 'accepted', 'alias', 'public');
         $problems = array();
         if (!is_null($result)) {
             foreach ($result as $row) {
@@ -199,6 +208,7 @@ class ProblemsDAO extends ProblemsDAOBase
                 $problem['points'] = $row['points'];
                 $problem['ratio'] = $row['ratio'];
                 $problem['tags'] = ProblemsDAO::getTagsForProblem($temp, true);
+                $problem['rating'] = is_null($row['rating']) ? 3.0 : $row['rating'];
                 array_push($problems, $problem);
             }
         }

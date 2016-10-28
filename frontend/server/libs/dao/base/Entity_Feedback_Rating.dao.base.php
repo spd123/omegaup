@@ -9,24 +9,23 @@
   * ******************************************************************************* */
 
 /** EntityFeedbackRating Data Access Object (DAO) Base.
-  * 
-  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link EntityFeedbackRating }. 
+  *
+  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para
+  * almacenar de forma permanente y recuperar instancias de objetos {@link EntityFeedbackRating }.
   * @access public
   * @abstract
-  * 
+  *
   */
 abstract class EntityFeedbackRatingDAOBase extends DAO
 {
-
 	/**
-	  *	Guardar registros. 
-	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link EntityFeedbackRating} pasado en la base de datos. La llave 
+	  *	Guardar registros.
+	  *
+	  *	Este metodo guarda el estado actual del objeto {@link EntityFeedbackRating} pasado en la base de datos. La llave
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
-	  *	
+	  *
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating
@@ -42,13 +41,12 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 		}
 	}
 
-
 	/**
-	  *	Obtener {@link EntityFeedbackRating} por llave primaria. 
-	  *	
-	  * Este metodo cargara un objeto {@link EntityFeedbackRating} de la base de datos 
-	  * usando sus llaves primarias. 
-	  *	
+	  *	Obtener {@link EntityFeedbackRating} por llave primaria.
+	  *
+	  * Este metodo cargara un objeto {@link EntityFeedbackRating} de la base de datos
+	  * usando sus llaves primarias.
+	  *
 	  *	@static
 	  * @return @link EntityFeedbackRating Un objeto del tipo {@link EntityFeedbackRating}. NULL si no hay tal registro.
 	  **/
@@ -66,12 +64,12 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 
 	/**
 	  *	Obtener todas las filas.
-	  *	
+	  *
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
 	  * un vector que contiene objetos de tipo {@link EntityFeedbackRating}. Tenga en cuenta que este metodo
-	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
+	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas.
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
-	  *	
+	  *
 	  *	@static
 	  * @param $pagina Pagina a ver.
 	  * @param $columnas_por_pagina Columnas por pagina.
@@ -86,7 +84,7 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 		{ $sql .= " ORDER BY `" . $orden . "` " . $tipo_de_orden;	}
 		if( ! is_null ( $pagina ) )
 		{
-			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
+			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina;
 		}
 		global $conn;
 		$rs = $conn->Execute($sql);
@@ -98,22 +96,21 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 		return $allData;
 	}
 
-
 	/**
 	  *	Buscar registros.
-	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link EntityFeedbackRating} de la base de datos. 
-	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
+	  *
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link EntityFeedbackRating} de la base de datos.
+	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento.
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
-	  *	
+	  *
 	  * <code>
 	  *  /**
 	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito igual a 20000
-	  *   {@*} 
+	  *   {@*}
 	  *	  $cliente = new Cliente();
 	  *	  $cliente->setLimiteCredito("20000");
 	  *	  $resultados = ClienteDAO::search($cliente);
-	  *	  
+	  *
 	  *	  foreach($resultados as $c ){
 	  *	  	echo $c->nombre . "<br>";
 	  *	  }
@@ -129,7 +126,7 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 			return self::search(new EntityFeedbackRating($Entity_Feedback_Rating));
 		}
 
-		$sql = "SELECT * from Entity_Feedback_Rating WHERE ("; 
+		$sql = "SELECT * from Entity_Feedback_Rating WHERE (";
 		$val = array();
 		if (!is_null( $Entity_Feedback_Rating->feature_id)) {
 			$sql .= " `feature_id` = ? AND";
@@ -179,9 +176,9 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 	private static final function update($Entity_Feedback_Rating)
 	{
 		$sql = "UPDATE Entity_Feedback_Rating SET  `entity_id` = ?, `rating` = ? WHERE  `feature_id` = ?;";
-		$params = array( 
-			$Entity_Feedback_Rating->entity_id, 
-			$Entity_Feedback_Rating->rating, 
+		$params = array(
+			$Entity_Feedback_Rating->entity_id,
+			$Entity_Feedback_Rating->rating,
 			$Entity_Feedback_Rating->feature_id, );
 		global $conn;
 		$conn->Execute($sql, $params);
@@ -190,20 +187,20 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 
 	/**
 	  *	Crear registros.
-	  *	
-	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
+	  *
+	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los
 	  * contenidos del objeto EntityFeedbackRating suministrado. Asegurese
-	  * de que los valores para todas las columnas NOT NULL se ha especificado 
-	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
+	  * de que los valores para todas las columnas NOT NULL se ha especificado
+	  * correctamente. Despues del comando INSERT, este metodo asignara la clave
 	  * primaria generada en el objeto EntityFeedbackRating dentro de la misma transaccion.
-	  *	
+	  *
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating a crear.
 	  **/
 	private static final function create( $Entity_Feedback_Rating )
 	{
 		$sql = "INSERT INTO Entity_Feedback_Rating ( `feature_id`, `entity_id`, `rating` ) VALUES ( ?, ?, ?);";
-		$params = array( 
+		$params = array(
 			$Entity_Feedback_Rating->feature_id,
 			$Entity_Feedback_Rating->entity_id,
 			$Entity_Feedback_Rating->rating,
@@ -212,33 +209,33 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 		$conn->Execute($sql, $params);
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
- 
+
 		return $ar;
 	}
 
 	/**
 	  *	Buscar por rango.
-	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link EntityFeedbackRating} de la base de datos siempre y cuando 
+	  *
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link EntityFeedbackRating} de la base de datos siempre y cuando
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link EntityFeedbackRating}.
-	  * 
+	  *
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
-	  *	
+	  *
 	  * <code>
 	  *  /**
-	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito 
+	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito
 	  *   * mayor a 2000 y menor a 5000. Y que tengan un descuento del 50%.
-	  *   {@*} 
+	  *   {@*}
 	  *	  $cr1 = new Cliente();
 	  *	  $cr1->limite_credito = "2000";
 	  *	  $cr1->descuento = "50";
-	  *	  
+	  *
 	  *	  $cr2 = new Cliente();
 	  *	  $cr2->limite_credito = "5000";
 	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);
-	  *	  
+	  *
 	  *	  foreach($resultados as $c ){
 	  *	  	echo $c->nombre . "<br>";
 	  *	  }
@@ -251,45 +248,41 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 	  **/
 	public static final function byRange( $Entity_Feedback_RatingA , $Entity_Feedback_RatingB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from Entity_Feedback_Rating WHERE ("; 
+		$sql = "SELECT * from Entity_Feedback_Rating WHERE (";
 		$val = array();
 		if( ( !is_null (($a = $Entity_Feedback_RatingA->feature_id) ) ) & ( ! is_null ( ($b = $Entity_Feedback_RatingB->feature_id) ) ) ){
 				$sql .= " `feature_id` >= ? AND `feature_id` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
+				array_push( $val, min($a,$b));
+				array_push( $val, max($a,$b));
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `feature_id` = ? AND"; 
+			$sql .= " `feature_id` = ? AND";
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
-			
 		}
 
 		if( ( !is_null (($a = $Entity_Feedback_RatingA->entity_id) ) ) & ( ! is_null ( ($b = $Entity_Feedback_RatingB->entity_id) ) ) ){
 				$sql .= " `entity_id` >= ? AND `entity_id` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
+				array_push( $val, min($a,$b));
+				array_push( $val, max($a,$b));
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `entity_id` = ? AND"; 
+			$sql .= " `entity_id` = ? AND";
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
-			
 		}
 
 		if( ( !is_null (($a = $Entity_Feedback_RatingA->rating) ) ) & ( ! is_null ( ($b = $Entity_Feedback_RatingB->rating) ) ) ){
 				$sql .= " `rating` >= ? AND `rating` <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
+				array_push( $val, min($a,$b));
+				array_push( $val, max($a,$b));
 		}elseif( !is_null ( $a ) || !is_null ( $b ) ){
-			$sql .= " `rating` = ? AND"; 
+			$sql .= " `rating` = ? AND";
 			$a = is_null ( $a ) ? $b : $a;
 			array_push( $val, $a);
-			
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
 		if( !is_null ( $orderBy ) ){
 		    $sql .= " order by `" . $orderBy . "` " . $orden ;
-
 		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -302,13 +295,13 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 
 	/**
 	  *	Eliminar registros.
-	  *	
+	  *
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto EntityFeedbackRating suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
-	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * en el objeto EntityFeedbackRating suministrado. Una vez que se ha suprimido un objeto, este no
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado.
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
-	  *	
+	  *
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
 	  * @param EntityFeedbackRating [$Entity_Feedback_Rating] El objeto de tipo EntityFeedbackRating a eliminar
@@ -323,6 +316,4 @@ abstract class EntityFeedbackRatingDAOBase extends DAO
 		$conn->Execute($sql, $params);
 		return $conn->Affected_Rows();
 	}
-
-
 }

@@ -423,16 +423,48 @@ class ProblemList extends OmegaupTestCase {
     }
 
     /**
-     * Test Raiting is in list
+     * Helper to assert rating was properly set
+     * @param  array $response     
      */
-    public function testRatingInList() {
-        $problemData = ProblemsFactory::createProblem();
-        $response = ProblemController::apiList(new Request());
-
+    private function assertValidRating($response) {
         foreach ($response['results'] as $responseProblem) {
             if (!isset($responseProblem['rating']) || $responseProblem['rating'] < 1 || $responseProblem['rating'] > 5) {
                 $this->fail('Rating was not properly set');
             }
         }
+    }
+
+    /**
+     * Test Raiting is in list
+     */
+    public function testRatingInListAnonymous() {
+        $problemData = ProblemsFactory::createProblem();
+        $response = ProblemController::apiList(new Request());
+
+        $this->assertValidRating($response);
+    }
+
+    /**
+     * Test Raiting is in list
+     */
+    public function testRatingInListUser() {
+        $problemData = ProblemsFactory::createProblem();
+        $response = ProblemController::apiList(new Request(array(
+            'auth_token' => self::login(UserFactory::createUser())
+        )));
+
+        $this->assertValidRating($response);
+    }
+
+    /**
+     * Test Raiting is in list
+     */
+    public function testRatingInListAdmin() {
+        $problemData = ProblemsFactory::createProblem();
+        $response = ProblemController::apiList(new Request(array(
+            'auth_token' => self::login(UserFactory::createAdminUser())
+        )));
+
+        $this->assertValidRating($response);
     }
 }
