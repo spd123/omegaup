@@ -424,7 +424,7 @@ class ProblemList extends OmegaupTestCase {
 
     /**
      * Helper to assert rating was properly set
-     * @param  array $response     
+     * @param  array $response
      */
     private function assertValidRating($response) {
         foreach ($response['results'] as $responseProblem) {

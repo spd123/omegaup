@@ -67,7 +67,7 @@ class ProblemsDAO extends ProblemsDAOBase
                     GROUP BY
                         Problems.problem_id
                     ) ps ON ps.problem_id = p.problem_id
-                LEFT JOIN 
+                LEFT JOIN
                     Entity_Feedback_Rating efr ON efr.entity_id = p.problem_id AND efr.entity_id = 2';
 
             $added_where = false;
@@ -121,7 +121,7 @@ class ProblemsDAO extends ProblemsDAOBase
                         Group_Roles gr ON gr.group_id = gu.group_id
                     WHERE gu.user_id = ? AND gr.role_id = 3
                 ) gr ON p.problem_id = gr.contest_id
-                LEFT JOIN 
+                LEFT JOIN
                     Entity_Feedback_Rating efr ON efr.entity_id = p.problem_id AND efr.entity_id = 2';
             $args[] = $user_id;
             $args[] = $user_id;
@@ -155,7 +155,7 @@ class ProblemsDAO extends ProblemsDAOBase
             $sql = '
                     FROM
                         Problems p
-                    LEFT JOIN 
+                    LEFT JOIN
                         Entity_Feedback_Rating efr ON efr.entity_id = p.problem_id AND efr.entity_id = 2';
 
             if (!is_null($tag)) {
